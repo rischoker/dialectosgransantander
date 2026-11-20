@@ -129,6 +129,31 @@
       color: #FDA4AF;
       border-bottom: 2px solid #F43F5E;
     }
+    /* Atlas (globo) */
+    .atlas-step:hover { background: rgba(255,255,255,0.55); }
+    .atlas-step.active { background: #FFFFFF; border-color: #E2DAD0; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .atlas-step-num { flex: none; width: 1.75rem; height: 1.75rem; border-radius: 9999px; display: flex; align-items: center; justify-content: center;
+      font: 700 12px "JetBrains Mono", monospace; background: #E2DAD0; color: #1C2526; transition: all .25s; }
+    .atlas-step.active .atlas-step-num { background: #B84A27; color: #fff; }
+    .atlas-pin { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 6px; opacity: 0; background: none; border: 0; padding: 0;
+      transition: opacity .3s; cursor: pointer; will-change: transform; }
+    .atlas-pin .dot { width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 9999px; background: var(--c); color: #fff; border: 2.5px solid #fff;
+      display: flex; align-items: center; justify-content: center; font: 700 12px "JetBrains Mono", monospace; box-shadow: 0 2px 8px rgba(0,0,0,.3);
+      transition: transform .2s; position: relative; }
+    .atlas-pin .dot::after { content: ""; position: absolute; inset: -7px; border-radius: 9999px; border: 2px solid var(--c); animation: atlasPulse 2.4s infinite; }
+    .atlas-pin.minor .dot { width: 14px; height: 14px; margin: -7px 0 0 -7px; border-width: 2px; }
+    .atlas-pin.minor .dot::after { display: none; }
+    .atlas-pin .lbl { margin-top: -13px; font: 700 12px "Plus Jakarta Sans", sans-serif; color: #1C2526; background: rgba(250,247,242,.94);
+      border: 1px solid #E2DAD0; border-radius: 6px; padding: 2px 7px; white-space: nowrap; }
+    .atlas-pin.minor .lbl { margin-top: -7px; font-size: 10.5px; font-weight: 600; color: #546062; }
+    .atlas-pin.left { flex-direction: row-reverse; transform-origin: 0 0; }
+    .atlas-pin.left .dot { margin: -13px -13px 0 0; }
+    .atlas-pin.left { translate: -100% 0; }
+    .atlas-pin:hover .dot, .atlas-pin:focus-visible .dot { transform: scale(1.18); }
+    .atlas-pin:focus-visible { outline: none; }
+    .atlas-pin:focus-visible .lbl { outline: 2px solid #B84A27; }
+    @keyframes atlasPulse { 0% { transform: scale(.7); opacity: .9; } 100% { transform: scale(1.5); opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) { .atlas-pin .dot::after { animation: none; opacity: .4; } }
   </style>
 </head>
 
@@ -151,14 +176,15 @@
       </a>
 
       <!-- Menú Desktop -->
-      <nav class="hidden lg:flex items-center gap-1 font-medium text-xs xl:text-sm text-pizarra-light">
+      <nav class="hidden lg:flex items-center gap-0.5 xl:gap-1 font-medium text-xs xl:text-sm text-pizarra-light whitespace-nowrap">
+        <a href="#atlas-globo" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Atlas</a>
         <a href="#geohistoria" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Geohistoria</a>
-        <a href="#subzonas" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">5 Subzonas &amp; Mapa</a>
+        <a href="#subzonas" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Subzonas</a>
         <a href="#tratamiento" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Tratamiento</a>
-        <a href="#ocana-voseo" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Voseo Ocaña</a>
-        <a href="#fonetica" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Fonética y Forma</a>
-        <a href="#atlas-lexico" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Atlas Léxico</a>
-        <a href="#corpus-videos" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Corpus &amp; Videos</a>
+        <a href="#ocana-voseo" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Voseo</a>
+        <a href="#fonetica" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Fonética</a>
+        <a href="#atlas-lexico" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Léxico</a>
+        <a href="#corpus-videos" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Corpus</a>
         <a href="#bibliografia" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Bibliografía</a>
       </nav>
 
@@ -177,7 +203,8 @@
 
     <!-- Menú Desplegable Móvil -->
     <div id="mobile-menu" class="hidden lg:hidden max-w-7xl mx-auto mt-2 glass-nav border border-tarjeta-borde rounded-2xl p-4 shadow-xl flex flex-col gap-2 font-medium text-sm">
-      <a href="#geohistoria" class="mobile-nav-link p-2.5 rounded-lg hover:bg-pergamino-dark">Geohistoria y Atlas</a>
+      <a href="#atlas-globo" class="mobile-nav-link p-2.5 rounded-lg hover:bg-pergamino-dark">Atlas: del globo al Santander</a>
+      <a href="#geohistoria" class="mobile-nav-link p-2.5 rounded-lg hover:bg-pergamino-dark">Geohistoria</a>
       <a href="#subzonas" class="mobile-nav-link p-2.5 rounded-lg hover:bg-pergamino-dark">Las 5 Subzonas &amp; Mapa Real</a>
       <a href="#tratamiento" class="mobile-nav-link p-2.5 rounded-lg hover:bg-pergamino-dark">Fórmulas de Tratamiento</a>
       <a href="#ocana-voseo" class="mobile-nav-link p-2.5 rounded-lg hover:bg-pergamino-dark">El Voseo de Ocaña</a>
@@ -223,7 +250,7 @@
         </p>
 
         <div class="flex flex-wrap gap-4 items-center mb-10">
-          <a href="#subzonas" class="px-6 py-3.5 rounded-xl bg-terracota text-white font-semibold hover:bg-terracota-dark transition-all shadow-lg hover:shadow-terracota/30 flex items-center gap-2">
+          <a href="#atlas-globo" class="px-6 py-3.5 rounded-xl bg-terracota text-white font-semibold hover:bg-terracota-dark transition-all shadow-lg hover:shadow-terracota/30 flex items-center gap-2">
             <i class="fa-solid fa-map-location-dot"></i>
             <span>Explorar Mapa Dialectal</span>
           </a>
@@ -284,6 +311,57 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1b. ATLAS: DEL GLOBO AL GRAN SANTANDER -->
+  <section id="atlas-globo" class="relative py-20 px-6 md:px-12 bg-pergamino-dark border-y border-tarjeta-borde scroll-mt-16 overflow-hidden">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+      <div class="lg:col-span-4 fade-up">
+        <span class="text-terracota font-mono text-xs font-bold uppercase tracking-widest bg-terracota/10 px-3.5 py-1.5 rounded-full inline-block mb-3">
+          Atlas · Viaje cartográfico
+        </span>
+        <h2 class="font-serif text-3xl md:text-4xl font-bold text-pizarra mb-4">Del globo al Gran Santander</h2>
+        <p class="text-pizarra-light text-base mb-6">
+          Acércate desde el planeta hasta los dos Santanderes y ubica dónde se habla cada una de las cinco variedades.
+        </p>
+
+        <ol class="grid grid-cols-2 lg:grid-cols-1 gap-2" id="atlas-steps">
+          <li><button type="button" data-step="0" class="atlas-step w-full h-full text-left flex items-start gap-3 p-2.5 sm:p-3 rounded-xl border border-transparent transition-all">
+            <span class="atlas-step-num">1</span>
+            <span><strong class="block font-serif text-pizarra text-sm sm:text-base">El planeta</strong><span class="hidden sm:block text-xs text-pizarra-light">Arrastra el globo para girarlo.</span></span>
+          </button></li>
+          <li><button type="button" data-step="1" class="atlas-step w-full h-full text-left flex items-start gap-3 p-2.5 sm:p-3 rounded-xl border border-transparent transition-all">
+            <span class="atlas-step-num">2</span>
+            <span><strong class="block font-serif text-pizarra text-sm sm:text-base">Colombia</strong><span class="hidden sm:block text-xs text-pizarra-light">32 departamentos; los Santanderes, en el nororiente andino.</span></span>
+          </button></li>
+          <li><button type="button" data-step="2" class="atlas-step w-full h-full text-left flex items-start gap-3 p-2.5 sm:p-3 rounded-xl border border-transparent transition-all">
+            <span class="atlas-step-num">3</span>
+            <span><strong class="block font-serif text-pizarra text-sm sm:text-base">Los Santanderes</strong><span class="hidden sm:block text-xs text-pizarra-light">Entre el río Magdalena, Boyacá, el Cesar y Venezuela.</span></span>
+          </button></li>
+          <li><button type="button" data-step="3" class="atlas-step w-full h-full text-left flex items-start gap-3 p-2.5 sm:p-3 rounded-xl border border-transparent transition-all">
+            <span class="atlas-step-num">4</span>
+            <span><strong class="block font-serif text-pizarra text-sm sm:text-base">Las 5 subzonas</strong><span class="hidden sm:block text-xs text-pizarra-light">Toca un punto para abrir su ficha dialectal.</span></span>
+          </button></li>
+        </ol>
+
+        <button type="button" id="atlas-replay" class="mt-5 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-verde-rio text-white text-xs font-semibold hover:bg-verde-oscuro transition-colors shadow-sm">
+          <i class="fa-solid fa-earth-americas"></i>
+          <span>Repetir el viaje</span>
+        </button>
+      </div>
+
+      <div class="lg:col-span-8 fade-up">
+        <div id="atlas-stage" class="relative w-full aspect-square sm:aspect-[4/3] max-h-[640px] rounded-3xl bg-[#E9E1D2] border border-tarjeta-borde shadow-inner overflow-hidden touch-none select-none">
+          <canvas id="atlas-canvas" class="absolute inset-0 w-full h-full" aria-label="Globo terráqueo que se acerca a Colombia y a los departamentos de Santander y Norte de Santander"></canvas>
+          <div id="atlas-pins" class="absolute inset-0 pointer-events-none"></div>
+          <div id="atlas-caption" class="absolute left-4 bottom-4 right-4 sm:right-auto bg-pergamino/92 backdrop-blur border border-tarjeta-borde rounded-xl px-4 py-2.5 text-xs text-pizarra shadow-sm max-w-sm pointer-events-none"></div>
+          <div id="atlas-fallback" class="hidden absolute inset-0 flex items-center justify-center p-8 text-center text-sm text-pizarra-light">
+            No se pudo cargar el mapa (revisa la conexión a internet). El resto de la página funciona normal.
+          </div>
+        </div>
+        <p class="mt-2 text-[11px] text-pizarra-light font-mono">Límites: DANE, Marco Geoestadístico Nacional 2018 · Natural Earth. Ubicaciones aproximadas de las cabeceras.</p>
       </div>
     </div>
   </section>
@@ -730,6 +808,63 @@
       </div>
     </div>
 
+    <!-- Líneas de entonación (curva melódica real a partir de audio) -->
+    <div id="entonacion" class="bg-white border border-tarjeta-borde rounded-3xl p-6 md:p-8 shadow-sm mb-12 fade-up scroll-mt-24">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-5 border-b border-tarjeta-borde mb-5">
+        <div class="max-w-2xl">
+          <h3 class="font-serif font-bold text-2xl text-pizarra">Líneas de entonación</h3>
+          <p class="text-sm text-pizarra-light">La línea sube y baja con la melodía de la voz. Graba una frase o sube un audio y compara hasta tres voces: por ejemplo, una muestra de Bucaramanga, una de Ocaña y la tuya.</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button type="button" id="pitch-rec" class="px-4 py-2 rounded-xl text-xs font-mono font-bold bg-terracota text-white shadow-sm hover:bg-terracota-dark transition-all inline-flex items-center gap-2">
+            <i class="fa-solid fa-microphone"></i><span>Grabar mi voz</span>
+          </button>
+          <label class="px-4 py-2 rounded-xl text-xs font-mono font-bold bg-pergamino-dark text-pizarra hover:bg-tarjeta-borde transition-all inline-flex items-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-file-audio"></i><span>Subir audio</span>
+            <input type="file" id="pitch-file" accept="audio/*,video/mp4" class="hidden">
+          </label>
+          <div class="inline-flex rounded-xl bg-pergamino-dark p-1 gap-1" role="group" aria-label="Muestras de las subzonas">
+            <span class="text-[11px] font-mono text-pizarra-light self-center px-2">Muestras:</span>
+            <button type="button" data-sample="1" class="pitch-sample w-7 h-7 rounded-lg text-xs font-mono font-bold text-white" style="background:#F43F5E" title="Subzona 1 · Bucaramanga">1</button>
+            <button type="button" data-sample="2" class="pitch-sample w-7 h-7 rounded-lg text-xs font-mono font-bold text-white" style="background:#F97316" title="Subzona 2 · Vélez / Málaga">2</button>
+            <button type="button" data-sample="3" class="pitch-sample w-7 h-7 rounded-lg text-xs font-mono font-bold text-white" style="background:#10B981" title="Subzona 3 · Magdalena Medio">3</button>
+            <button type="button" data-sample="4" class="pitch-sample w-7 h-7 rounded-lg text-xs font-mono font-bold text-white" style="background:#F59E0B" title="Subzona 4 · Cúcuta / Pamplona">4</button>
+            <button type="button" data-sample="5" class="pitch-sample w-7 h-7 rounded-lg text-xs font-mono font-bold text-white" style="background:#14B8A6" title="Subzona 5 · Ocaña">5</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-8">
+          <div class="relative bg-verde-oscuro rounded-2xl overflow-hidden">
+            <canvas id="pitch-canvas" class="block w-full h-[260px] sm:h-[300px]" aria-label="Gráfica de la curva de entonación"></canvas>
+            <div id="pitch-empty" class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 text-slate-300 text-sm pointer-events-none">
+              <i class="fa-solid fa-wave-square text-3xl text-ocre-dorado mb-3"></i>
+              <span>Graba una frase corta (hasta 12 s) o sube un audio para ver su línea de entonación.</span>
+            </div>
+            <div id="pitch-busy" class="hidden absolute inset-0 bg-verde-oscuro/80 flex items-center justify-center text-amber-300 font-mono text-xs">
+              <i class="fa-solid fa-circle-notch fa-spin mr-2"></i><span>Analizando la voz…</span>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-3 mt-3">
+            <label class="inline-flex items-center gap-2 text-xs text-pizarra-light cursor-pointer">
+              <input type="checkbox" id="pitch-align" checked class="accent-terracota">
+              Igualar la duración de las frases
+            </label>
+            <span class="text-[11px] font-mono text-pizarra-light">Eje vertical: semitonos respecto al tono medio de cada hablante</span>
+          </div>
+        </div>
+        <div class="lg:col-span-4 flex flex-col gap-3">
+          <div id="pitch-tracks" class="flex flex-col gap-2"></div>
+          <div class="bg-pergamino border border-tarjeta-borde rounded-2xl p-4 text-xs text-pizarra-light leading-relaxed">
+            <strong class="text-pizarra block mb-1">¿Cómo leer la línea?</strong>
+            Subidas y bajadas grandes y rápidas indican una melodía marcada; una línea más plana, una melodía más suave. Fíjate sobre todo en el <em>final</em> de cada frase: si sube y luego cae, es una curva circunfleja.
+            <span class="block mt-2 text-[11px]">El análisis se hace en tu navegador; el audio no se envía a ningún servidor. Es una medida aproximada: funciona mejor con frases cortas y sin ruido de fondo.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- 4 Tarjetas de Morfosintaxis Compartida -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 fade-up">
       <div class="bg-white border border-tarjeta-borde rounded-2xl p-6 hover:border-terracota transition-all shadow-sm">
@@ -867,12 +1002,13 @@
             <!-- OPCIONES DE ENLACE DIRECTO & ENTRADA DE URL PERSONALIZADA -->
             <div class="space-y-3">
               <div class="flex gap-2">
-                <input type="text" id="video-url-input" placeholder="ID de YouTube o URL (ej. L_LupnjgBZO)..." class="flex-1 bg-black/50 border border-white/20 rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-400 focus:outline-none focus:border-terracota">
+                <input type="text" id="video-url-input" placeholder="Enlace de YouTube o Google Drive…" class="flex-1 bg-black/50 border border-white/20 rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-400 focus:outline-none focus:border-terracota">
                 <button onclick="saveCustomVideoUrl()" class="px-3.5 py-2 bg-terracota text-white text-xs font-mono font-bold rounded-xl hover:bg-terracota-dark transition-colors flex items-center gap-1 shadow-sm">
                   <i class="fa-solid fa-floppy-disk"></i>
                   <span>Guardar</span>
                 </button>
               </div>
+              <p class="text-[10px] font-mono text-slate-400 -mt-1">"Guardar" lo deja solo en este navegador. Para que lo vean todos, pon el enlace en <code>defaultYoutubeIds</code> del código.</p>
 
               <!-- Cargar archivo de video local para exposiciones en clase -->
               <div class="bg-white/5 p-3 rounded-xl border border-white/10 flex items-center justify-between">
@@ -1757,12 +1893,14 @@
     /* ==========================================================================
        9. REPRODUCTOR AUDIOVISUAL DUAL-MODE (ANTI-ERROR 153 + TTS + LOCAL MP4)
        ========================================================================== */
+    // Videos por subzona: pega aquí el enlace o el ID de YouTube (o un enlace de Google Drive).
+    // Lo que se escriba aquí lo ven todos; lo que se guarda con el botón "Guardar" queda solo en ese navegador.
     const defaultYoutubeIds = {
-      1: "L_LupnjgBZO",
-      2: "L_LupnjgBZO",
-      3: "L_LupnjgBZO",
-      4: "L_LupnjgBZO",
-      5: "L_LupnjgBZO"
+      1: "",
+      2: "",
+      3: "",
+      4: "",
+      5: ""
     };
 
     let currentVideoSubzone = 1;
@@ -1776,7 +1914,7 @@
 
     function parseVideoUrl(rawInput) {
       const val = (rawInput || "").trim();
-      if (!val) return { type: 'youtube', id: 'L_LupnjgBZO' };
+      if (!val) return { type: 'none' };
 
       if (val.startsWith('blob:') || /\.(mp4|webm|ogg)(\?.*)?$/i.test(val)) {
         return { type: 'direct', url: val };
@@ -1801,7 +1939,7 @@
         return { type: 'youtube', id: val };
       }
 
-      return { type: 'youtube', id: 'L_LupnjgBZO' };
+      return { type: 'none' };
     }
 
     function saveCustomVideoUrl() {
@@ -1889,7 +2027,23 @@
         return;
       }
 
-      const ytId = (parsed.type === 'youtube') ? parsed.id : 'L_LupnjgBZO';
+      if (parsed.type === 'none') {
+        frame.innerHTML = `
+          <div class="w-full h-full min-h-[260px] p-6 flex flex-col items-center justify-center text-center bg-gradient-to-br from-verde-oscuro via-black to-slate-900 rounded-2xl">
+            <i class="fa-solid fa-video-slash text-2xl text-slate-500 mb-3"></i>
+            <h4 class="font-serif font-bold text-white text-base mb-1">Aún no hay video para la subzona #${currentVideoSubzone}</h4>
+            <p class="text-[11px] text-slate-300 max-w-xs mb-4">Pega abajo un enlace de YouTube o Google Drive, o carga un MP4. Mientras tanto puedes escuchar el diálogo con la voz del navegador.</p>
+            <button onclick="speakSubzoneSpeech(${currentVideoSubzone})" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-mono text-xs font-bold shadow-lg transition-all flex items-center gap-1.5">
+              <i class="fa-solid fa-volume-high text-sm"></i><span>Escuchar el diálogo</span>
+            </button>
+            <div id="tts-equalizer" class="hidden mt-3 text-[10px] font-mono text-emerald-400">Voz sintética del navegador (no imita el acento regional)</div>
+          </div>
+        `;
+        if (statusText) statusText.innerHTML = `<i class="fa-solid fa-circle-info text-amber-300 mr-1"></i> Sin video asignado`;
+        return;
+      }
+
+      const ytId = parsed.id;
       const directYtUrl = `https://www.youtube.com/watch?v=${ytId}`;
       const embedSrc = `https://www.youtube.com/embed/${ytId}?rel=0`;
 
@@ -1921,13 +2075,13 @@
 
                 <button onclick="speakSubzoneSpeech(${currentVideoSubzone})" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-mono text-xs font-bold shadow-lg transition-all flex items-center gap-1.5">
                   <i class="fa-solid fa-volume-high text-sm"></i>
-                  <span>Escuchar muestra (TTS)</span>
+                  <span>Escuchar diálogo (voz sintética)</span>
                 </button>
               </div>
             </div>
 
             <div id="tts-equalizer" class="hidden flex items-center justify-center gap-1.5 py-1 bg-black/40 rounded-lg">
-              <span class="text-[10px] font-mono text-emerald-400 mr-2">Sintetizando habla regional...</span>
+              <span class="text-[10px] font-mono text-emerald-400 mr-2">Voz sintética del navegador (no imita el acento)</span>
               <div class="w-1.5 h-3.5 bg-emerald-400 rounded-full animate-bounce"></div>
               <div class="w-1.5 h-5 bg-emerald-400 rounded-full animate-bounce" style="animation-delay: 0.15s"></div>
               <div class="w-1.5 h-3 bg-emerald-400 rounded-full animate-bounce" style="animation-delay: 0.3s"></div>
@@ -2066,5 +2220,12 @@
       renderBibliography();
     });
   </script>
+
+  <!-- Atlas (globo) y líneas de entonación -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+  <script src="data/geo-santander.js"></script>
+  <script src="js/atlas.js"></script>
+  <script src="js/entonacion.js"></script>
 </body>
 </html>
