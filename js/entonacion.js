@@ -165,6 +165,7 @@
   function analyze(buffer) {
     const x = toMono16k(buffer);
     const { f0, rms, peak } = yin(x);
+    if (window.__debugPitch) window.__pitchRaw = { f0, rms, peak };
     const hz = clean(f0);
     const voiced = Array.from(hz).filter(v => !isNaN(v));
     if (voiced.length < 15) return null;
@@ -182,7 +183,7 @@
     return FREE_COLORS.find(c => !used.includes(c)) || FREE_COLORS[0];
   }
 
-  async function addFromArrayBuffer(arr, name, color) {
+  async function addFromArrayBuffer(arr, name, color, extra) {
     busyEl.classList.remove('hidden');
     try {
       const buf = await audioCtx().decodeAudioData(arr.slice(0));
@@ -191,9 +192,11 @@
       if (!res) { toast('No se detectó voz clara en ese audio. Prueba con una frase más cerca del micrófono.'); return; }
       if (buf.duration > MAX_SECONDS) toast(`Solo se analizan los primeros ${MAX_SECONDS} segundos del audio`);
       if (tracks.length >= MAX_TRACKS) removeTrack(tracks[0]);
-      const t = { id: Math.random().toString(36).slice(2), name, color: color || nextColor(), buffer: buf, ...res };
+      const t = { id: Math.random().toString(36).slice(2), name, color: color || nextColor(), buffer: buf, ...res, ...(extra || {}) };
+      if (window.Fonetica) { try { t.fon = Fonetica.analyze(buf, res); } catch (e) { console.error(e); } }
       tracks.push(t);
       renderList(); draw();
+      if (window.Fonetica && t.fon) Fonetica.select(t, tracks);
     } catch (e) {
       console.error(e);
       toast('No se pudo leer ese archivo de audio');
@@ -206,6 +209,7 @@
     if (playing && playing.track === t) stop();
     const i = tracks.indexOf(t); if (i >= 0) tracks.splice(i, 1);
     renderList(); draw();
+    if (window.Fonetica && Fonetica.current() === t) Fonetica.select(tracks[tracks.length - 1] || null, tracks);
   }
 
   function renderList() {
@@ -247,8 +251,13 @@
     try { playing.src.stop(); } catch (e) { /* ya terminó */ }
     if (playing.track.playBtn) playing.track.playBtn.innerHTML = '<i class="fa-solid fa-play text-xs"></i>';
     playing = null; draw();
+    if (window.Fonetica && Fonetica.current()) Fonetica.drawCursor(null);
   }
-  function tick() { if (!playing) return; draw(); requestAnimationFrame(tick); }
+  function tick() {
+    if (!playing) return; draw();
+    if (window.Fonetica && Fonetica.current() === playing.track) Fonetica.drawCursor(audioCtx().currentTime - playing.t0);
+    requestAnimationFrame(tick);
+  }
 
   /* ---------- Dibujo ---------- */
   let W = 0, H = 0, dpr = 1;
@@ -339,7 +348,12 @@
         try {
           const r = await fetch(`audios/subzona-${n}.${ext}`);
           if (!r.ok) continue;
-          await addFromArrayBuffer(await r.arrayBuffer(), `Muestra ${n} · ${z.name}`, z.color);
+          let meta = {};
+          try { const mj = await fetch(`audios/subzona-${n}.json`); if (mj.ok) meta = await mj.json(); } catch (e) { /* sin metadatos */ }
+          await addFromArrayBuffer(await r.arrayBuffer(), `Muestra ${n} · ${z.name}`, z.color, {
+            transcript: meta.texto || '', words: meta.palabras || null, notes: meta.notas || [], source: meta.fuente || '',
+            dialect: (n === '3' || n === '5') ? 'caribe' : 'interior'
+          });
           return;
         } catch (e) { /* probar la siguiente extensión */ }
       }
