@@ -170,10 +170,10 @@
     const hiFloor = sHi[Math.floor(frames * 0.2)] ?? -100;
     const D = Array.from(Ehi, (v, i) => v - Emid[i]);
     const sD = D.slice().sort((a, b) => a - b);
-    const dThr = Math.max(-6, sD[Math.floor(frames * 0.9)] ?? 0);
+    const dThr = Math.min(-4, sD[Math.floor(frames * 0.9)] ?? 0);
     let lab = new Array(frames);
     for (let f = 0; f < frames; f++) {
-      if (!voiced(f) && Ehi[f] > hiFloor + 6 && (D[f] > dThr || (hi[f] > 0.45 && cen[f] > 3800))) { lab[f] = 'sibilante'; continue; }
+      if ((!voiced(f) || D[f] > -3) && Ehi[f] > hiFloor + 6 && (D[f] > dThr || (hi[f] > 0.45 && cen[f] > 3800))) { lab[f] = 'sibilante'; continue; }
       if (E[f] < thr) { lab[f] = 'pausa'; continue; }
       if (voiced(f)) {
         if (hi[f] > 0.4) lab[f] = 'fricsonora';
@@ -555,17 +555,19 @@
       const d = IPA[b.dataset.p] || ['—', '—', '—'];
       document.getElementById('fon-ph-card').innerHTML = `<strong class="font-mono text-terracota text-lg mr-2">[${b.dataset.p}]</strong><span class="text-sm text-pizarra"><b>${d[0]}</b> · ${d[1]} · ${d[2]}</span>`;
     }));
-    // Comparación con lo medido
-    const implS = words.reduce((a, w) => a + w.ph.filter(x => x.implosive).length, 0);
-    const allS = words.reduce((a, w) => a + w.ph.filter(x => ['s', 'z', 'h'].includes(x.p) || x.implosive).length, 0);
-    if (current && allS) {
-      const got = current.fon.profile.sib;
-      const ratio = got / allS;
-      cmpEl.innerHTML = `<i class="fa-solid fa-magnifying-glass-chart text-terracota mr-1"></i> El texto tiene <b>${allS}</b> /s/ (${implS} al final de sílaba) y el audio muestra <b>${got}</b> con fricción sibilante clara. ` +
-        (ratio >= 0.7 ? 'Lectura: <b>/s/ conservada</b> como [s] plena, rasgo del interior andino y la frontera.' :
-          ratio <= 0.4 ? 'Lectura: <b>/s/ debilitada</b> (aspirada [h] o elidida), rasgo caribeño de Ocaña y el Magdalena Medio.' :
-            'Lectura: <b>realización mixta</b>; unas /s/ plenas y otras debilitadas.') +
-        ' <span class="text-pizarra-light">(estimación automática)</span>';
+    // Cada /s/ del texto frente a lo que se oye (si la muestra trae tiempos por palabra)
+    if (current && current.words) {
+      const sib = current.fon.segs.filter(x => x.cls === 'sibilante');
+      const items = current.words.map(w => {
+        const ph = g2p(w.w, { aspirate: false, dElision: false })[0];
+        if (!ph || !ph.ph.some(x => x.p === 's' || x.p === 'z')) return null;
+        const hit = sib.some(x => x.t1 > w.ini - 0.08 && x.t0 < w.fin + 0.05);
+        return `<span class="inline-flex items-center gap-1 mr-1.5 mb-1.5 px-2 py-0.5 rounded-full border text-[11px] ${hit ? 'border-cyan-400 bg-cyan-50 text-pizarra' : 'border-tarjeta-borde bg-pergamino text-pizarra-light'}">
+          <b>${w.w}</b> ${hit ? '[s] con silbido claro' : 'sin silbido claro'}</span>`;
+      }).filter(Boolean);
+      cmpEl.innerHTML = items.length ? `<div class="text-xs text-pizarra mb-1.5"><i class="fa-solid fa-magnifying-glass-chart text-terracota mr-1"></i><b>Las /s/ de esta muestra:</b> <span class="text-pizarra-light">«sin silbido claro» puede ser una /s/ aspirada [h], perdida, o tapada por el ruido de fondo; escúchala para decidir.</span></div><div class="flex flex-wrap">${items.join('')}</div>` : '';
+    } else if (current) {
+      cmpEl.innerHTML = `<i class="fa-solid fa-magnifying-glass-chart text-terracota mr-1"></i> En este audio hay <b>${current.fon.profile.sib}</b> tramos con fricción sibilante clara [s].`;
     } else cmpEl.textContent = '';
   }
 

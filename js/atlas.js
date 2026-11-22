@@ -15,7 +15,14 @@
 
   const G = window.GEO_SANTANDER;
   const world = topojson.feature(G.world, G.world.objects.countries);
-  const borders = topojson.mesh(G.world, G.world.objects.countries, (a, b) => a !== b);
+  // Países que tienen versión detallada (se ven de cerca): en la vista lejana se usa la versión simple
+  const near = G.near || G.ven;
+  const DET = new Set(near.features.map(f => f.properties.name).concat(['Colombia']));
+  const isDet = (g) => DET.has(g.properties && g.properties.name);
+  const worldRest = { type: 'FeatureCollection', features: world.features.filter(f => !isDet(f)) };
+  const worldDet = { type: 'FeatureCollection', features: world.features.filter(f => isDet(f) && f.properties.name !== 'Colombia') };
+  const borders = topojson.mesh(G.world, G.world.objects.countries, (a, b) => a !== b && !isDet(a) && !isDet(b));
+  const bordersDet = topojson.mesh(G.world, G.world.objects.countries, (a, b) => a !== b && (isDet(a) || isDet(b)));
   const colombia110 = world.features.find(f => f.properties.name === 'Colombia');
   const dptos = G.dptos.features;
   const santanderes = dptos.filter(f => f.properties.name === 'SANTANDER' || f.properties.name === 'NORTE DE SANTANDER');
@@ -24,9 +31,9 @@
 
   // Colores tomados de la paleta de la página
   const C = {
-    ocean: '#DCE6E4', oceanEdge: '#B9CBC8', land: '#E6E2D9', landStroke: '#C9BCA8',
-    colombia: '#F5DCC3', dptoStroke: '#C7A98C', santander: '#B84A27', norte: '#D97706',
-    ink: '#1C2526', inkSoft: '#546062', grat: 'rgba(31,78,70,0.10)'
+    ocean: '#1B4640', oceanDeep: '#10302B', oceanEdge: 'rgba(160,220,205,0.35)', land: '#E4DCCB', landStroke: '#B8A98F',
+    colombia: '#F3DFC6', dptoStroke: '#C29C78', santander: '#B84A27', norte: '#D97706',
+    ink: '#1C2526', inkSoft: '#3E4A4B', grat: 'rgba(255,255,255,0.07)'
   };
 
   // Subzonas (coordenadas aproximadas de las cabeceras; colores iguales a los de la página)
@@ -83,30 +90,44 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
 
-    // Océano
+    // Halo de atmósfera (solo con el globo completo a la vista)
+    const rr = R * cam.zoom;
+    if (cam.zoom < 1.6) {
+      const halo = ctx.createRadialGradient(W / 2, H / 2, rr * 0.96, W / 2, H / 2, rr * 1.16);
+      halo.addColorStop(0, 'rgba(125,211,192,0.38)'); halo.addColorStop(1, 'rgba(125,211,192,0)');
+      ctx.fillStyle = halo; ctx.beginPath(); ctx.arc(W / 2, H / 2, rr * 1.16, 0, 7); ctx.fill();
+    }
+    // Océano con luz lateral
     ctx.beginPath(); path(sphere);
-    const g = ctx.createRadialGradient(W / 2 - R * 0.3, H / 2 - R * 0.35, R * 0.1, W / 2, H / 2, R * cam.zoom);
-    g.addColorStop(0, '#E8F0EE'); g.addColorStop(1, C.ocean);
+    const g = ctx.createRadialGradient(W / 2 - rr * 0.35, H / 2 - rr * 0.4, rr * 0.05, W / 2, H / 2, rr);
+    g.addColorStop(0, '#2C6B61'); g.addColorStop(0.7, C.ocean); g.addColorStop(1, C.oceanDeep);
     ctx.fillStyle = cam.zoom < 3 ? g : C.ocean; ctx.fill();
 
     ctx.beginPath(); path(graticule); ctx.strokeStyle = C.grat; ctx.lineWidth = 0.6; ctx.stroke();
 
     const d = detail();
     // Países (110m)
-    ctx.beginPath(); path(world); ctx.fillStyle = C.land; ctx.fill();
+    ctx.beginPath(); path(worldRest); ctx.fillStyle = C.land; ctx.fill();
     ctx.beginPath(); path(borders); ctx.strokeStyle = C.landStroke; ctx.lineWidth = 0.7; ctx.stroke();
+    if (d < 1) {
+      ctx.globalAlpha = 1 - d;
+      ctx.beginPath(); path(worldDet); ctx.fillStyle = C.land; ctx.fill();
+      ctx.beginPath(); path(bordersDet); ctx.strokeStyle = C.landStroke; ctx.lineWidth = 0.7; ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
 
     // Colombia resaltada (vista global)
     if (d < 1) {
       ctx.globalAlpha = 1 - d;
-      ctx.beginPath(); path(colombia110); ctx.fillStyle = C.santander; ctx.fill();
+      ctx.save(); ctx.shadowColor = 'rgba(217,119,6,0.9)'; ctx.shadowBlur = 14;
+      ctx.beginPath(); path(colombia110); ctx.fillStyle = C.santander; ctx.fill(); ctx.restore();
       ctx.globalAlpha = 1;
     }
 
     // Detalle: Venezuela y departamentos
     if (d > 0) {
       ctx.globalAlpha = d;
-      ctx.beginPath(); path(G.ven); ctx.fillStyle = C.land; ctx.fill(); ctx.strokeStyle = C.landStroke; ctx.lineWidth = 0.8; ctx.stroke();
+      near.features.forEach(f => { ctx.beginPath(); path(f); ctx.fillStyle = C.land; ctx.fill(); ctx.strokeStyle = C.landStroke; ctx.lineWidth = 0.8; ctx.stroke(); });
       dptos.forEach(f => {
         ctx.beginPath(); path(f);
         const n = f.properties.name;
@@ -114,8 +135,9 @@
         ctx.fill();
         ctx.strokeStyle = C.dptoStroke; ctx.lineWidth = 0.7; ctx.stroke();
       });
+      ctx.save(); ctx.shadowColor = 'rgba(184,74,39,0.65)'; ctx.shadowBlur = 18;
       ctx.beginPath(); santanderes.forEach(f => path(f));
-      ctx.strokeStyle = '#FFF8EE'; ctx.lineWidth = 1.6; ctx.stroke();
+      ctx.strokeStyle = '#FFF8EE'; ctx.lineWidth = 1.8; ctx.stroke(); ctx.restore();
       ctx.globalAlpha = 1;
     }
 
