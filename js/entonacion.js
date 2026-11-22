@@ -109,6 +109,15 @@
       const m = median(Array.from(f0.subarray(Math.max(0, i - 15), Math.min(n, i + 16))));
       if (out[i] / m > 1.75) out[i] /= 2; else if (out[i] / m < 0.6) out[i] *= 2;
     }
+    // Corrección global: el habla rara vez se aleja más de ~10 semitonos del tono medio;
+    // lo que se aleja casi una octava suele ser un error de octava (ruido de fondo, música).
+    const gm = median(Array.from(out));
+    for (let i = 0; i < n; i++) {
+      if (isNaN(out[i])) continue;
+      let r = 12 * Math.log2(out[i] / gm);
+      if (r > 10) { out[i] /= 2; r -= 12; } else if (r < -10) { out[i] *= 2; r += 12; }
+      if (Math.abs(r) > 11) out[i] = NaN;
+    }
     // Filtro de mediana (5)
     const med = Float32Array.from(out);
     for (let i = 2; i < n - 2; i++) {
@@ -116,12 +125,12 @@
       const w = [out[i - 2], out[i - 1], out[i], out[i + 1], out[i + 2]].filter(v => !isNaN(v)).sort((a, b) => a - b);
       med[i] = w[w.length >> 1];
     }
-    // Quitar tramos sonoros muy cortos (< 50 ms) y rellenar huecos cortos (≤ 40 ms)
+    // Quitar tramos sonoros muy cortos (< 70 ms) y rellenar huecos cortos (≤ 40 ms)
     let i = 0;
     while (i < n) {
       if (isNaN(med[i])) { i++; continue; }
       let j = i; while (j < n && !isNaN(med[j])) j++;
-      if (j - i < 5) for (let k = i; k < j; k++) med[k] = NaN;
+      if (j - i < 7) for (let k = i; k < j; k++) med[k] = NaN;
       i = j;
     }
     for (i = 1; i < n; i++) {
