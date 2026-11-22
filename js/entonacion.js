@@ -9,7 +9,6 @@
   const emptyEl = document.getElementById('pitch-empty');
   const busyEl = document.getElementById('pitch-busy');
   const recBtn = document.getElementById('pitch-rec');
-  const fileIn = document.getElementById('pitch-file');
   const alignEl = document.getElementById('pitch-align');
 
   const MAX_TRACKS = 3;
@@ -208,7 +207,7 @@
   function removeTrack(t) {
     if (playing && playing.track === t) stop();
     const i = tracks.indexOf(t); if (i >= 0) tracks.splice(i, 1);
-    renderList(); draw();
+    renderList(); draw(); if (typeof refreshChips === 'function') refreshChips();
     if (window.Fonetica && Fonetica.current() === t) Fonetica.select(tracks[tracks.length - 1] || null, tracks);
   }
 
@@ -335,31 +334,69 @@
   }
 
   /* ---------- Entradas ---------- */
-  fileIn.addEventListener('change', async (e) => {
-    const f = e.target.files[0]; if (!f) return;
-    await addFromArrayBuffer(await f.arrayBuffer(), f.name.replace(/\.[^.]+$/, ''));
-    fileIn.value = '';
-  });
 
-  document.querySelectorAll('.pitch-sample').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const n = btn.dataset.sample, z = ZONE[n];
-      for (const ext of ['mp3', 'm4a', 'wav', 'ogg']) {
-        try {
-          const r = await fetch(`audios/subzona-${n}.${ext}`);
-          if (!r.ok) continue;
-          let meta = {};
-          try { const mj = await fetch(`audios/subzona-${n}.json`); if (mj.ok) meta = await mj.json(); } catch (e) { /* sin metadatos */ }
-          await addFromArrayBuffer(await r.arrayBuffer(), `Muestra ${n} · ${z.name}`, z.color, {
-            transcript: meta.texto || '', words: meta.palabras || null, notes: meta.notas || [], source: meta.fuente || '',
-            dialect: (n === '3' || n === '5') ? 'caribe' : 'interior'
-          });
-          return;
-        } catch (e) { /* probar la siguiente extensión */ }
-      }
-      toast(`Aún no hay grabación para la subzona ${n}. Súbela como audios/subzona-${n}.mp3`);
+  /* ---------- Muestras fijas de la página (data/muestras.js) ---------- */
+  const MU = (window.MUESTRAS && window.MUESTRAS.muestras) || [];
+  const samplesEl = document.getElementById('pitch-samples');
+  const chipFor = {};
+  function refreshChips() {
+    MU.forEach(m => {
+      const b = chipFor[m.id]; if (!b) return;
+      const on = tracks.some(t => t.sampleId === m.id);
+      b.classList.toggle('ring-2', on); b.classList.toggle('ring-offset-2', on);
+      b.style.opacity = on ? '1' : '.82';
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
-  });
+  }
+  async function loadSample(m) {
+    const existing = tracks.find(t => t.sampleId === m.id);
+    if (existing) { if (window.Fonetica) Fonetica.select(existing, tracks); return; }
+    const z = ZONE[m.zona];
+    const r = await fetch(m.archivo);
+    if (!r.ok) { toast('No se pudo cargar la muestra ' + m.id); return; }
+    // dos muestras de la misma subzona: la segunda con un tono más claro para distinguirlas
+    const sameZone = tracks.filter(t => t.zone === m.zona).length;
+    await addFromArrayBuffer(await r.arrayBuffer(), `${m.id} · ${m.lugar}`, sameZone ? lighten(z.color) : z.color, {
+      sampleId: m.id, zone: m.zona, transcript: m.texto, words: m.palabras, notes: m.notas, source: m.fuente, dialect: m.dialecto
+    });
+    refreshChips();
+  }
+  function lighten(hex) {
+    const n = parseInt(hex.slice(1), 16), f = (c) => Math.round(c + (255 - c) * 0.45);
+    return '#' + [n >> 16, (n >> 8) & 255, n & 255].map(c => f(c).toString(16).padStart(2, '0')).join('');
+  }
+  if (samplesEl) {
+    MU.forEach(m => {
+      const z = ZONE[m.zona];
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'pitch-sample text-left px-3 py-2 rounded-xl text-white shadow-sm transition-all hover:opacity-100 ring-white';
+      b.style.background = z.color; b.style.opacity = '.82';
+      b.style.setProperty('--tw-ring-color', z.color);
+      const frag = m.texto.split(/[,.;!?]/).map(x => x.trim()).filter(x => x.split(' ').length >= 2)[0] || m.texto;
+      b.innerHTML = `<span class="block font-mono text-[11px] font-bold">${m.id} · ${m.lugar}</span><span class="block text-xs leading-tight max-w-[220px] truncate">«${frag}»</span>`;
+      b.addEventListener('click', () => {
+        const t = tracks.find(t => t.sampleId === m.id);
+        if (t && window.Fonetica && Fonetica.current() === t) { removeTrack(t); refreshChips(); }
+        else loadSample(m);
+      });
+      chipFor[m.id] = b;
+      samplesEl.appendChild(b);
+    });
+    const empty = document.createElement('span');
+    empty.className = 'self-center text-[11px] font-mono text-pizarra-light';
+    empty.textContent = 'Subzona 2 (Vélez / Málaga): sin muestra todavía';
+    samplesEl.appendChild(empty);
+  }
+  // Al llegar al laboratorio se cargan dos muestras contrastadas: interior (1a) y Ocaña (5a)
+  let autoLoaded = false;
+  const labIO = new IntersectionObserver(async (ents) => {
+    if (autoLoaded || !ents.some(e => e.isIntersecting)) return;
+    autoLoaded = true; labIO.disconnect();
+    for (const id of ['5a', '1a']) { const m = MU.find(x => x.id === id); if (m) await loadSample(m); }
+  }, { rootMargin: '200px 0px' });
+  labIO.observe(canvas);
+  window.cargarMuestra = (id) => { const m = MU.find(x => x.id === id); if (m) return loadSample(m); };
 
   let rec = null;
   recBtn.addEventListener('click', async () => {
@@ -398,5 +435,5 @@
   resize(); renderList();
 
   // Para pruebas y depuración
-  window.entonacion = { analyze, tracks, addFromArrayBuffer };
+  window.entonacion = { analyze, tracks, addFromArrayBuffer, loadSample: (id) => window.cargarMuestra(id) };
 })();

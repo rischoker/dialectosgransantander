@@ -293,11 +293,6 @@
               <div class="absolute inset-0 bg-gradient-to-t from-verde-oscuro via-transparent to-transparent pointer-events-none"></div>
 
               <!-- Floating Photo Upload Button -->
-              <label class="absolute top-4 left-4 bg-black/60 hover:bg-terracota backdrop-blur-md text-white text-[11px] font-mono px-3 py-1.5 rounded-xl border border-white/20 cursor-pointer transition-all flex items-center gap-1.5 shadow-md z-10">
-                <i class="fa-solid fa-camera"></i>
-                <span>Subir foto propia</span>
-                <input type="file" accept="image/*" class="hidden" onchange="loadCustomLandscapeImage(event, 'hero-landscape-container')">
-              </label>
 
               <span class="absolute top-4 right-4 bg-verde-oscuro/85 backdrop-blur-md text-white text-xs font-mono px-3 py-1 rounded-full border border-white/20 z-10">
                 Santander, Colombia
@@ -353,10 +348,10 @@
       </div>
 
       <div class="lg:col-span-8 fade-up">
-        <div id="atlas-stage" class="relative w-full aspect-square sm:aspect-[4/3] max-h-[640px] rounded-3xl bg-[#E9E1D2] border border-tarjeta-borde shadow-inner overflow-hidden touch-none select-none">
+        <div id="atlas-stage" class="relative w-full aspect-square sm:aspect-[4/3] max-h-[640px] rounded-3xl border border-verde-oscuro shadow-2xl overflow-hidden touch-none select-none" style="background: radial-gradient(ellipse at 50% 45%, #183A35 0%, #0B1A17 70%, #07110F 100%)">
           <canvas id="atlas-canvas" class="absolute inset-0 w-full h-full" aria-label="Globo terráqueo que se acerca a Colombia y a los departamentos de Santander y Norte de Santander"></canvas>
           <div id="atlas-pins" class="absolute inset-0 pointer-events-none"></div>
-          <div id="atlas-caption" class="absolute left-4 bottom-4 right-4 sm:right-auto bg-pergamino/92 backdrop-blur border border-tarjeta-borde rounded-xl px-4 py-2.5 text-xs text-pizarra shadow-sm max-w-sm pointer-events-none"></div>
+          <div id="atlas-caption" class="absolute left-4 bottom-4 right-4 sm:right-auto bg-pergamino/90 backdrop-blur border border-tarjeta-borde rounded-xl px-4 py-2.5 text-xs text-pizarra shadow-sm max-w-sm pointer-events-none"></div>
           <div id="atlas-fallback" class="hidden absolute inset-0 flex items-center justify-center p-8 text-center text-sm text-pizarra-light">
             No se pudo cargar el mapa (revisa la conexión a internet). El resto de la página funciona normal.
           </div>
@@ -494,11 +489,6 @@
               <span class="font-serif font-bold text-sm text-white">Mapa Cartográfico Dialectal</span>
             </div>
 
-            <label class="text-[11px] font-mono text-emerald-300 bg-verde-rio/40 hover:bg-verde-rio border border-emerald-500/30 px-2.5 py-1 rounded-full cursor-pointer transition-colors flex items-center gap-1">
-              <i class="fa-solid fa-camera text-xs"></i>
-              <span>Cargar foto propia</span>
-              <input type="file" accept="image/*" class="hidden" onchange="loadCustomSubzoneImage(event)">
-            </label>
           </div>
 
           <!-- MAPA SVG DE SANTANDER Y NORTE DE SANTANDER CON NODOS PULSANTES -->
@@ -723,11 +713,6 @@
 
             <div class="absolute inset-0 bg-gradient-to-t from-verde-oscuro via-transparent to-transparent pointer-events-none"></div>
 
-            <label class="absolute top-3 left-3 bg-black/60 hover:bg-terracota backdrop-blur-md text-white text-[11px] font-mono px-3 py-1.5 rounded-xl border border-white/20 cursor-pointer transition-all flex items-center gap-1.5 shadow-md z-10">
-              <i class="fa-solid fa-camera"></i>
-              <span>Subir foto propia</span>
-              <input type="file" accept="image/*" class="hidden" onchange="loadCustomLandscapeImage(event, 'ocana-landscape-container')">
-            </label>
 
             <!-- Selector de galería fotográfica de Ocaña -->
             <div class="absolute top-3 right-3 flex gap-1.5 z-10">
@@ -813,26 +798,16 @@
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-5 border-b border-tarjeta-borde mb-5">
         <div class="max-w-2xl">
           <h3 class="font-serif font-bold text-2xl text-pizarra">Líneas de entonación</h3>
-          <p class="text-sm text-pizarra-light">La línea sube y baja con la melodía de la voz. Graba una frase o sube un audio y compara hasta tres voces: por ejemplo, una muestra de Bucaramanga, una de Ocaña y la tuya.</p>
+          <p class="text-sm text-pizarra-light">La línea sube y baja con la melodía de la voz. Elige hasta tres muestras reales de las subzonas para compararlas, o graba tu propia voz.</p>
         </div>
         <div class="flex flex-wrap gap-2">
           <button type="button" id="pitch-rec" class="px-4 py-2 rounded-xl text-xs font-mono font-bold bg-terracota text-white shadow-sm hover:bg-terracota-dark transition-all inline-flex items-center gap-2">
             <i class="fa-solid fa-microphone"></i><span>Grabar mi voz</span>
           </button>
-          <label class="px-4 py-2 rounded-xl text-xs font-mono font-bold bg-pergamino-dark text-pizarra hover:bg-tarjeta-borde transition-all inline-flex items-center gap-2 cursor-pointer">
-            <i class="fa-solid fa-file-audio"></i><span>Subir audio</span>
-            <input type="file" id="pitch-file" accept="audio/*,video/mp4" class="hidden">
-          </label>
-          <div class="inline-flex rounded-xl bg-pergamino-dark p-1 gap-1" role="group" aria-label="Muestras de las subzonas">
-            <span class="text-[11px] font-mono text-pizarra-light self-center px-2">Muestras:</span>
-            <button type="button" data-sample="1" class="pitch-sample w-7 h-7 rounded-lg text-xs font-mono font-bold text-white" style="background:#F43F5E" title="Subzona 1 · Bucaramanga">1</button>
-            <button type="button" data-sample="2" class="pitch-sample w-7 h-7 rounded-lg text-xs font-mono font-bold text-white" style="background:#F97316" title="Subzona 2 · Vélez / Málaga">2</button>
-            <button type="button" data-sample="3" class="pitch-sample w-7 h-7 rounded-lg text-xs font-mono font-bold text-white" style="background:#10B981" title="Subzona 3 · Magdalena Medio">3</button>
-            <button type="button" data-sample="4" class="pitch-sample w-7 h-7 rounded-lg text-xs font-mono font-bold text-white" style="background:#F59E0B" title="Subzona 4 · Cúcuta / Pamplona">4</button>
-            <button type="button" data-sample="5" class="pitch-sample w-7 h-7 rounded-lg text-xs font-mono font-bold text-white" style="background:#14B8A6" title="Subzona 5 · Ocaña">5</button>
-          </div>
         </div>
       </div>
+
+      <div id="pitch-samples" class="flex flex-wrap gap-2 mb-5" role="group" aria-label="Muestras de audio por subzona"></div>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div class="lg:col-span-8">
@@ -840,7 +815,7 @@
             <canvas id="pitch-canvas" class="block w-full h-[260px] sm:h-[300px]" aria-label="Gráfica de la curva de entonación"></canvas>
             <div id="pitch-empty" class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 text-slate-300 text-sm pointer-events-none">
               <i class="fa-solid fa-wave-square text-3xl text-ocre-dorado mb-3"></i>
-              <span>Graba una frase corta (hasta 12 s) o sube un audio para ver su línea de entonación.</span>
+              <span>Elige una muestra para ver su línea de entonación.</span>
             </div>
             <div id="pitch-busy" class="hidden absolute inset-0 bg-verde-oscuro/80 flex items-center justify-center text-amber-300 font-mono text-xs">
               <i class="fa-solid fa-circle-notch fa-spin mr-2"></i><span>Analizando la voz…</span>
@@ -904,7 +879,7 @@
           </div>
           <div id="fon-ipa" class="mt-4 flex flex-wrap"></div>
           <div id="fon-ph-card" class="text-xs text-pizarra-light min-h-[24px]">Toca un símbolo para ver su lugar y modo de articulación.</div>
-          <p id="fon-compare" class="mt-2 text-xs text-pizarra leading-relaxed"></p>
+          <div id="fon-compare" class="mt-3 text-xs text-pizarra leading-relaxed"></div>
         </div>
         <p class="mt-3 text-[11px] text-pizarra-light">Análisis acústico automático y aproximado (FFT, LPC y YIN en el navegador). En español de Colombia hay seseo: la <em>z</em> y la <em>c</em> suenan [s], así que la fricativa interdental sorda [θ] del centro de España no aparece; la interdental que sí aparece es la aproximante [ð] de <em>cada</em> o <em>todo</em>.</p>
       </div>
@@ -1017,64 +992,25 @@
           <!-- Inyectado por JS -->
         </div>
 
-        <!-- MÓDULO INTEGRADO DE VIDEOS ROBUSTO CON DETECCIÓN DE SANDBOX Y SÍNTESIS DE VOZ -->
-        <div class="lg:col-span-5 bg-white/5 border border-white/15 rounded-3xl p-6 backdrop-blur-md flex flex-col justify-between shadow-2xl">
-          <div>
-            <div class="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
-              <div class="flex items-center gap-2">
-                <i class="fa-solid fa-film text-terracota text-lg"></i>
-                <h3 class="font-serif font-bold text-xl text-white">Reproductor Audiovisual</h3>
-              </div>
-              <button onclick="toggleIframeMode()" id="iframe-toggle-btn" class="text-[11px] font-mono text-slate-300 hover:text-white bg-white/10 px-2.5 py-1 rounded-full border border-white/20 transition-colors">
-                <i class="fa-solid fa-shield-halved text-amber-300 mr-1"></i> Modo: Auto
-              </button>
-            </div>
-
-            <!-- Pestañas por subregión para guardar/reproducir video -->
-            <div class="flex flex-wrap gap-1.5 mb-4" id="video-subzone-tabs">
-              <button onclick="loadVideoSubzone(1)" id="vidtab-1" class="vid-tab active px-3 py-1.5 rounded-lg text-xs font-mono bg-terracota text-white font-bold">1. Bucaramanga</button>
-              <button onclick="loadVideoSubzone(2)" id="vidtab-2" class="vid-tab px-3 py-1.5 rounded-lg text-xs font-mono bg-white/10 text-slate-300 hover:bg-white/20">2. Sur / Vélez</button>
-              <button onclick="loadVideoSubzone(3)" id="vidtab-3" class="vid-tab px-3 py-1.5 rounded-lg text-xs font-mono bg-white/10 text-slate-300 hover:bg-white/20">3. Magdalena M.</button>
-              <button onclick="loadVideoSubzone(4)" id="vidtab-4" class="vid-tab px-3 py-1.5 rounded-lg text-xs font-mono bg-white/10 text-slate-300 hover:bg-white/20">4. Cúcuta</button>
-              <button onclick="loadVideoSubzone(5)" id="vidtab-5" class="vid-tab px-3 py-1.5 rounded-lg text-xs font-mono bg-white/10 text-slate-300 hover:bg-white/20">5. Ocaña</button>
-            </div>
-
-            <!-- FRAME DE VISTA PREVIA Y REPRODUCTOR INTERACTIVO EN VIVO -->
-            <div id="video-player-frame" class="w-full min-h-[260px] rounded-2xl bg-black/90 border border-white/20 overflow-hidden flex flex-col items-center justify-center relative mb-4 shadow-inner">
-              <!-- Renderizado dinámicamente por JS -->
-            </div>
-
-            <!-- OPCIONES DE ENLACE DIRECTO & ENTRADA DE URL PERSONALIZADA -->
-            <div class="space-y-3">
-              <div class="flex gap-2">
-                <input type="text" id="video-url-input" placeholder="Enlace de YouTube o Google Drive…" class="flex-1 bg-black/50 border border-white/20 rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-400 focus:outline-none focus:border-terracota">
-                <button onclick="saveCustomVideoUrl()" class="px-3.5 py-2 bg-terracota text-white text-xs font-mono font-bold rounded-xl hover:bg-terracota-dark transition-colors flex items-center gap-1 shadow-sm">
-                  <i class="fa-solid fa-floppy-disk"></i>
-                  <span>Guardar</span>
-                </button>
-              </div>
-              <p class="text-[10px] font-mono text-slate-400 -mt-1">"Guardar" lo deja solo en este navegador. Para que lo vean todos, pon el enlace en <code>defaultYoutubeIds</code> del código.</p>
-
-              <!-- Cargar archivo de video local para exposiciones en clase -->
-              <div class="bg-white/5 p-3 rounded-xl border border-white/10 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <i class="fa-solid fa-file-video text-emerald-400"></i>
-                  <span class="text-xs font-mono text-slate-300">¿Exponer sin internet?</span>
-                </div>
-                <label class="px-3 py-1.5 rounded-lg bg-verde-rio hover:bg-emerald-700 text-white font-mono text-xs font-bold cursor-pointer transition-colors inline-flex items-center gap-1.5">
-                  <i class="fa-solid fa-folder-open"></i>
-                  <span>Cargar MP4 Local</span>
-                  <input type="file" id="local-video-input" accept="video/*" class="hidden" onchange="handleLocalVideoUpload(event)">
-                </label>
-              </div>
-            </div>
+        <!-- REPRODUCTOR AUDIOVISUAL: videos reales por subzona con transcripción sincronizada -->
+        <div class="lg:col-span-5 bg-white/5 border border-white/15 rounded-3xl p-5 backdrop-blur-md flex flex-col shadow-2xl">
+          <div class="flex items-center gap-2 mb-4 border-b border-white/10 pb-3">
+            <i class="fa-solid fa-film text-terracota text-lg"></i>
+            <h3 class="font-serif font-bold text-xl text-white">Reproductor audiovisual</h3>
           </div>
 
-          <!-- Estado de Sandbox y Reproducción -->
-          <div class="mt-4 pt-3 border-t border-white/10 text-[11px] text-slate-400 font-mono flex items-center justify-between">
-            <span id="video-status-text"><i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> Modo Seguro Activo</span>
-            <button onclick="toggleIframeMode()" class="text-amber-300 underline hover:text-white">Alternar Iframe</button>
+          <div class="flex flex-wrap gap-1.5 mb-4" id="video-subzone-tabs">
+            <button onclick="loadVideoSubzone(1)" id="vidtab-1" class="vid-tab px-3 py-1.5 rounded-lg text-xs font-mono">1. Bucaramanga</button>
+            <button onclick="loadVideoSubzone(2)" id="vidtab-2" class="vid-tab px-3 py-1.5 rounded-lg text-xs font-mono">2. Sur / Vélez</button>
+            <button onclick="loadVideoSubzone(3)" id="vidtab-3" class="vid-tab px-3 py-1.5 rounded-lg text-xs font-mono">3. Barrancabermeja</button>
+            <button onclick="loadVideoSubzone(4)" id="vidtab-4" class="vid-tab px-3 py-1.5 rounded-lg text-xs font-mono">4. Cúcuta</button>
+            <button onclick="loadVideoSubzone(5)" id="vidtab-5" class="vid-tab px-3 py-1.5 rounded-lg text-xs font-mono">5. Ocaña</button>
           </div>
+
+          <div id="video-player-frame" class="relative w-full rounded-2xl bg-black border border-white/20 overflow-hidden mb-3"></div>
+
+          <div id="video-transcript" class="flex-1 min-h-0 max-h-[240px] overflow-y-auto pr-1 space-y-1"></div>
+          <p id="video-source" class="mt-3 pt-3 border-t border-white/10 text-[11px] text-slate-400 leading-relaxed"></p>
         </div>
       </div>
     </div>
@@ -1670,11 +1606,6 @@
               </div>
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
 
-              <label class="absolute top-2.5 left-2.5 bg-black/60 hover:bg-terracota backdrop-blur-md text-white text-[10px] font-mono px-2.5 py-1 rounded-lg border border-white/20 cursor-pointer transition-all flex items-center gap-1 z-10">
-                <i class="fa-solid fa-camera"></i>
-                <span>Subir foto</span>
-                <input type="file" accept="image/*" class="hidden" onchange="loadCustomLandscapeImage(event, 'subzone-landscape-holder-${id}')">
-              </label>
 
               <span class="absolute bottom-2.5 left-3 right-3 text-[11px] font-mono text-slate-200 z-10 pointer-events-none">
                 <i class="fa-solid fa-mountain-sun mr-1 text-ocre-dorado"></i> ${data.photoCaption}
@@ -1935,219 +1866,6 @@
       });
     }
 
-    /* ==========================================================================
-       9. REPRODUCTOR AUDIOVISUAL DUAL-MODE (ANTI-ERROR 153 + TTS + LOCAL MP4)
-       ========================================================================== */
-    // Videos por subzona: pega aquí el enlace o el ID de YouTube (o un enlace de Google Drive).
-    // Lo que se escriba aquí lo ven todos; lo que se guarda con el botón "Guardar" queda solo en ese navegador.
-    const defaultYoutubeIds = {
-      1: "",
-      2: "",
-      3: "",
-      4: "",
-      5: ""
-    };
-
-    let currentVideoSubzone = 1;
-    const isSandboxedPreview = (
-      window.location.origin === 'null' ||
-      window.location.protocol === 'about:' ||
-      window.location.protocol === 'file:' ||
-      window.location.hostname.includes('usercontent.goog')
-    );
-    let forceIframeMode = false;
-
-    function parseVideoUrl(rawInput) {
-      const val = (rawInput || "").trim();
-      if (!val) return { type: 'none' };
-
-      if (val.startsWith('blob:') || /\.(mp4|webm|ogg)(\?.*)?$/i.test(val)) {
-        return { type: 'direct', url: val };
-      }
-
-      if (val.includes('drive.google.com')) {
-        const match = val.match(/\/d\/([a-zA-Z0-9_-]+)/);
-        const fileId = match ? match[1] : '';
-        return {
-          type: 'drive',
-          url: fileId ? `https://drive.google.com/file/d/${fileId}/preview` : val
-        };
-      }
-
-      const ytRegex = /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-      const ytMatch = val.match(ytRegex);
-      if (ytMatch) {
-        return { type: 'youtube', id: ytMatch[1] };
-      }
-
-      if (/^[a-zA-Z0-9_-]{11}$/.test(val)) {
-        return { type: 'youtube', id: val };
-      }
-
-      return { type: 'none' };
-    }
-
-    function saveCustomVideoUrl() {
-      const inputEl = document.getElementById("video-url-input");
-      if (!inputEl) return;
-      const val = inputEl.value.trim();
-      if (!val) {
-        showToast("Ingresa un ID o enlace válido de YouTube o Drive");
-        return;
-      }
-      try {
-        localStorage.setItem(`custom_video_subzone_${currentVideoSubzone}`, val);
-      } catch (e) {
-        // Ignorar si localStorage está restringido en sandbox
-      }
-      renderVideoPlayer(val);
-      showToast(`Video guardado para Subzona #${currentVideoSubzone}`);
-    }
-
-    function handleLocalVideoUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const blobUrl = URL.createObjectURL(file);
-      renderVideoPlayer(blobUrl);
-      showToast(`Video local "${file.name}" cargado`);
-    }
-
-    function toggleIframeMode() {
-      forceIframeMode = !forceIframeMode;
-      const btn = document.getElementById("iframe-toggle-btn");
-      if (btn) {
-        btn.innerHTML = forceIframeMode
-          ? `<i class="fa-solid fa-code text-emerald-400 mr-1"></i> Modo: Iframe`
-          : `<i class="fa-solid fa-shield-halved text-amber-300 mr-1"></i> Modo: Auto`;
-      }
-      loadVideoSubzone(currentVideoSubzone);
-    }
-
-    function loadVideoSubzone(id) {
-      currentVideoSubzone = id;
-
-      for (let i = 1; i <= 5; i++) {
-        const btn = document.getElementById(`vidtab-${i}`);
-        if (btn) {
-          btn.className = (i === id)
-            ? "vid-tab active px-3 py-1.5 rounded-lg text-xs font-mono bg-terracota text-white font-bold shadow-sm"
-            : "vid-tab px-3 py-1.5 rounded-lg text-xs font-mono bg-white/10 text-slate-300 hover:bg-white/20";
-        }
-      }
-
-      let savedUrl = defaultYoutubeIds[id];
-      try {
-        savedUrl = localStorage.getItem(`custom_video_subzone_${id}`) || defaultYoutubeIds[id];
-      } catch (e) {
-        // Fallback si localStorage no está disponible
-      }
-
-      const inputEl = document.getElementById("video-url-input");
-      if (inputEl) inputEl.value = savedUrl;
-      renderVideoPlayer(savedUrl);
-    }
-
-    function renderVideoPlayer(input) {
-      const frame = document.getElementById("video-player-frame");
-      const statusText = document.getElementById("video-status-text");
-      if (!frame) return;
-
-      const parsed = parseVideoUrl(input);
-      const subzoneInfo = subzonesData[currentVideoSubzone];
-
-      if (parsed.type === 'direct') {
-        frame.innerHTML = `
-          <video controls autoplay class="w-full h-full max-h-[260px] object-contain bg-black rounded-2xl">
-            <source src="${parsed.url}">
-            Tu navegador no soporta la reproducción directa.
-          </video>
-        `;
-        if (statusText) statusText.innerHTML = `<i class="fa-solid fa-file-video text-emerald-400 mr-1"></i> Video MP4 Local cargado`;
-        return;
-      }
-
-      if (parsed.type === 'drive') {
-        frame.innerHTML = `<iframe src="${parsed.url}" class="w-full h-[260px] border-0 rounded-2xl" allow="autoplay" allowfullscreen></iframe>`;
-        if (statusText) statusText.innerText = "Enlace Google Drive activo";
-        return;
-      }
-
-      if (parsed.type === 'none') {
-        frame.innerHTML = `
-          <div class="w-full h-full min-h-[260px] p-6 flex flex-col items-center justify-center text-center bg-gradient-to-br from-verde-oscuro via-black to-slate-900 rounded-2xl">
-            <i class="fa-solid fa-video-slash text-2xl text-slate-500 mb-3"></i>
-            <h4 class="font-serif font-bold text-white text-base mb-1">Aún no hay video para la subzona #${currentVideoSubzone}</h4>
-            <p class="text-[11px] text-slate-300 max-w-xs mb-4">Pega abajo un enlace de YouTube o Google Drive, o carga un MP4. Mientras tanto puedes escuchar el diálogo con la voz del navegador.</p>
-            <button onclick="speakSubzoneSpeech(${currentVideoSubzone})" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-mono text-xs font-bold shadow-lg transition-all flex items-center gap-1.5">
-              <i class="fa-solid fa-volume-high text-sm"></i><span>Escuchar el diálogo</span>
-            </button>
-            <div id="tts-equalizer" class="hidden mt-3 text-[10px] font-mono text-emerald-400">Voz sintética del navegador (no imita el acento regional)</div>
-          </div>
-        `;
-        if (statusText) statusText.innerHTML = `<i class="fa-solid fa-circle-info text-amber-300 mr-1"></i> Sin video asignado`;
-        return;
-      }
-
-      const ytId = parsed.id;
-      const directYtUrl = `https://www.youtube.com/watch?v=${ytId}`;
-      const embedSrc = `https://www.youtube.com/embed/${ytId}?rel=0`;
-
-      if (isSandboxedPreview && !forceIframeMode) {
-        frame.innerHTML = `
-          <div class="relative w-full h-full min-h-[260px] bg-gradient-to-br from-verde-oscuro via-black to-slate-900 p-5 flex flex-col justify-between rounded-2xl border border-white/15">
-            <div class="flex items-center justify-between text-xs font-mono text-slate-300 border-b border-white/10 pb-2.5">
-              <span class="flex items-center gap-1.5 text-amber-300">
-                <i class="fa-brands fa-youtube text-red-500 text-sm"></i>
-                <span>ID: ${ytId}</span>
-              </span>
-              <span class="bg-amber-500/20 text-amber-200 border border-amber-500/40 px-2 py-0.5 rounded text-[10px]">
-                Vista Segura Sandbox
-              </span>
-            </div>
-
-            <div class="my-3 flex flex-col items-center text-center">
-              <div class="w-12 h-12 rounded-full bg-terracota/30 border border-terracota flex items-center justify-center mb-2.5 shadow-lg">
-                <i class="fa-solid fa-play text-lg ml-0.5 text-white"></i>
-              </div>
-              <h4 class="font-serif font-bold text-white text-base mb-1">Muestra Dialectal Subzona #${currentVideoSubzone}</h4>
-              <p class="text-[11px] text-slate-300 max-w-sm mb-3 font-mono">${subzoneInfo.title}</p>
-
-              <div class="flex flex-wrap gap-2 justify-center">
-                <a href="${directYtUrl}" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-mono text-xs font-bold shadow-lg transition-all flex items-center gap-1.5">
-                  <i class="fa-brands fa-youtube text-sm"></i>
-                  <span>Abrir en YouTube ↗</span>
-                </a>
-
-                <button onclick="speakSubzoneSpeech(${currentVideoSubzone})" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-mono text-xs font-bold shadow-lg transition-all flex items-center gap-1.5">
-                  <i class="fa-solid fa-volume-high text-sm"></i>
-                  <span>Escuchar diálogo (voz sintética)</span>
-                </button>
-              </div>
-            </div>
-
-            <div id="tts-equalizer" class="hidden flex items-center justify-center gap-1.5 py-1 bg-black/40 rounded-lg">
-              <span class="text-[10px] font-mono text-emerald-400 mr-2">Voz sintética del navegador (no imita el acento)</span>
-              <div class="w-1.5 h-3.5 bg-emerald-400 rounded-full animate-bounce"></div>
-              <div class="w-1.5 h-5 bg-emerald-400 rounded-full animate-bounce" style="animation-delay: 0.15s"></div>
-              <div class="w-1.5 h-3 bg-emerald-400 rounded-full animate-bounce" style="animation-delay: 0.3s"></div>
-            </div>
-          </div>
-        `;
-        if (statusText) statusText.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i> Vista Segura (Evita Error 153)`;
-      } else {
-        frame.innerHTML = `
-          <div class="w-full flex flex-col">
-            <iframe src="${embedSrc}" class="w-full h-[225px] border-0 rounded-t-2xl" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            <div class="bg-black/80 px-3 py-2 flex items-center justify-between text-[11px] font-mono border-t border-white/10">
-              <span class="text-slate-300">YouTube Embed (${ytId})</span>
-              <a href="${directYtUrl}" target="_blank" rel="noopener noreferrer" class="text-amber-300 hover:text-white underline">Abrir en YouTube ↗</a>
-            </div>
-          </div>
-        `;
-        if (statusText) statusText.innerHTML = `<i class="fa-brands fa-youtube text-red-500 mr-1"></i> Iframe de YouTube (${ytId})`;
-      }
-    }
-
     function speakSubzoneSpeech(subzoneId) {
       if (!('speechSynthesis' in window)) {
         showToast("Tu navegador no soporta síntesis de voz Web Speech API");
@@ -2271,7 +1989,9 @@
   <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
   <script src="data/geo-santander.js"></script>
   <script src="js/atlas.js"></script>
+  <script src="data/muestras.js"></script>
   <script src="js/fonetica.js"></script>
   <script src="js/entonacion.js"></script>
+  <script src="js/videos.js"></script>
 </body>
 </html>
