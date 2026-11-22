@@ -863,6 +863,51 @@
           </div>
         </div>
       </div>
+      <!-- Análisis fonético automático -->
+      <div id="fon-panel" class="hidden mt-8 pt-6 border-t border-tarjeta-borde">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-3 mb-4">
+          <div>
+            <h4 class="font-serif font-bold text-xl text-pizarra">Análisis fonético</h4>
+            <p class="text-xs text-pizarra-light max-w-xl">Espectrograma de la voz y segmentación automática por modo de articulación. Las líneas blancas sobre las vocales son sus formantes F1 y F2.</p>
+          </div>
+          <div id="fon-track-chips" class="flex flex-wrap gap-1.5"></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-8">
+            <div class="bg-verde-oscuro rounded-2xl p-2">
+              <canvas id="fon-spec" class="block w-full h-[250px] sm:h-[290px] cursor-pointer" aria-label="Espectrograma y segmentos fonéticos; toca un segmento para ver su descripción"></canvas>
+            </div>
+            <div id="fon-legend" class="flex flex-wrap gap-x-4 gap-y-1.5 mt-3"></div>
+            <p id="fon-source" class="mt-2 text-[11px] text-pizarra-light leading-relaxed"></p>
+          </div>
+          <div class="lg:col-span-4 flex flex-col gap-3">
+            <div id="fon-info" class="bg-white border-2 border-terracota/30 rounded-2xl p-4 min-h-[120px]"></div>
+            <div class="bg-pergamino border border-tarjeta-borde rounded-2xl p-3">
+              <div class="text-[10px] font-mono uppercase tracking-wider text-pizarra-light mb-1">Trapecio vocálico (vocales medidas)</div>
+              <canvas id="fon-vowels" class="block w-full h-[170px]" aria-label="Vocales medidas ubicadas en el trapecio vocálico"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div id="fon-profile" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mt-5"></div>
+
+        <div class="mt-5 bg-white border border-tarjeta-borde rounded-2xl p-4">
+          <div class="flex flex-col md:flex-row gap-3 md:items-center">
+            <label class="text-xs font-mono font-bold text-pizarra whitespace-nowrap" for="fon-text">¿Qué dice?</label>
+            <input id="fon-text" type="text" placeholder="Escribe la frase del audio…" class="flex-1 bg-pergamino border border-tarjeta-borde rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-terracota">
+            <select id="fon-dialect" class="bg-pergamino border border-tarjeta-borde rounded-xl px-3 py-2 text-xs font-mono">
+              <option value="interior">Realización: interior (/s/ plena)</option>
+              <option value="caribe">Realización: Ocaña / Magdalena (/s/ → [h])</option>
+            </select>
+            <label class="inline-flex items-center gap-1.5 text-xs text-pizarra-light whitespace-nowrap"><input id="fon-delision" type="checkbox" class="accent-terracota"> /-d-/ elidida (-ao)</label>
+          </div>
+          <div id="fon-ipa" class="mt-4 flex flex-wrap"></div>
+          <div id="fon-ph-card" class="text-xs text-pizarra-light min-h-[24px]">Toca un símbolo para ver su lugar y modo de articulación.</div>
+          <p id="fon-compare" class="mt-2 text-xs text-pizarra leading-relaxed"></p>
+        </div>
+        <p class="mt-3 text-[11px] text-pizarra-light">Análisis acústico automático y aproximado (FFT, LPC y YIN en el navegador). En español de Colombia hay seseo: la <em>z</em> y la <em>c</em> suenan [s], así que la fricativa interdental sorda [θ] del centro de España no aparece; la interdental que sí aparece es la aproximante [ð] de <em>cada</em> o <em>todo</em>.</p>
+      </div>
     </div>
 
     <!-- 4 Tarjetas de Morfosintaxis Compartida -->
@@ -2226,6 +2271,7 @@
   <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
   <script src="data/geo-santander.js"></script>
   <script src="js/atlas.js"></script>
+  <script src="js/fonetica.js"></script>
   <script src="js/entonacion.js"></script>
 </body>
 </html>
