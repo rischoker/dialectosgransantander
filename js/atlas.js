@@ -71,7 +71,9 @@
   let W = 0, H = 0, R = 0, dpr = 1;
   const cam = { lon: STEPS[0].lon, lat: STEPS[0].lat, zoom: 1 };
   let step = 0, anim = null, spinning = true, lastT = 0, dragging = null;
-  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // El viaje del globo es el centro de la sección: se anima aunque Windows tenga desactivados
+  // los "efectos de animación" (prefers-reduced-motion), que de otro modo lo hacía saltar de golpe.
+  const reduceMotion = false;
 
   function resize() {
     const r = stage.getBoundingClientRect();
