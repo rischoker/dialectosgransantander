@@ -216,17 +216,16 @@
     listEl.innerHTML = '';
     tracks.forEach(t => {
       const row = document.createElement('div');
-      row.className = 'flex items-center gap-3 bg-pergamino border border-tarjeta-borde rounded-xl p-3';
+      row.className = 'flex items-center gap-1 bg-pergamino border border-tarjeta-borde rounded-lg pl-2 pr-1 py-0.5';
+      row.title = `Rango ${t.range.toFixed(1)} semitonos · final ${t.shape}`;
       row.innerHTML = `
-        <span class="w-3 h-8 rounded-full flex-none" style="background:${t.color}"></span>
-        <div class="flex-1 min-w-0">
-          <div class="font-semibold text-sm text-pizarra truncate"></div>
-          <div class="text-[11px] font-mono text-pizarra-light">Rango ${t.range.toFixed(1)} st · Final ${t.shape}</div>
-        </div>
-        <button type="button" class="pt-eye w-8 h-8 rounded-lg bg-pergamino-dark text-pizarra hover:bg-tarjeta-borde" aria-label="Mostrar u ocultar la línea" title="Mostrar u ocultar la línea"><i class="fa-solid ${t.hidden ? 'fa-eye-slash' : 'fa-eye'} text-xs"></i></button>
-        <button type="button" class="pt-play w-8 h-8 rounded-lg bg-verde-rio text-white hover:bg-verde-oscuro" aria-label="Reproducir"><i class="fa-solid fa-play text-xs"></i></button>
-        <button type="button" class="pt-del w-8 h-8 rounded-lg bg-pergamino-dark text-pizarra hover:bg-tarjeta-borde" aria-label="Quitar"><i class="fa-solid fa-xmark text-xs"></i></button>`;
-      row.querySelector('.truncate').textContent = t.name;
+        <span class="w-2.5 h-2.5 rounded-full flex-none" style="background:${t.color}"></span>
+        <span class="pt-name text-[11px] font-semibold text-pizarra whitespace-nowrap mr-1"></span>
+        <span class="text-[10px] font-mono text-pizarra-light whitespace-nowrap mr-1 hidden xl:inline">${t.range.toFixed(1)} st · ${t.shape.split(' ')[0]}</span>
+        <button type="button" class="pt-eye w-6 h-6 rounded-md text-pizarra hover:bg-tarjeta-borde" aria-label="Mostrar u ocultar la línea" title="Mostrar u ocultar la línea"><i class="fa-solid ${t.hidden ? 'fa-eye-slash' : 'fa-eye'} text-[10px]"></i></button>
+        <button type="button" class="pt-play w-6 h-6 rounded-md bg-verde-rio text-white hover:bg-verde-oscuro" aria-label="Reproducir"><i class="fa-solid fa-play text-[10px]"></i></button>
+        <button type="button" class="pt-del w-6 h-6 rounded-md text-pizarra hover:bg-tarjeta-borde" aria-label="Quitar"><i class="fa-solid fa-xmark text-[10px]"></i></button>`;
+      row.querySelector('.pt-name').textContent = t.name;
       const playBtn = row.querySelector('.pt-play');
       playBtn.addEventListener('click', () => { if (playing && playing.track === t) stop(); else play(t); });
       row.querySelector('.pt-del').addEventListener('click', () => removeTrack(t));
@@ -246,13 +245,13 @@
     src.start();
     playing = { track: t, src, t0: ac.currentTime, rate };
     src.onended = () => { if (playing && playing.src === src) stop(); };
-    t.playBtn.innerHTML = '<i class="fa-solid fa-stop text-xs"></i>';
+    t.playBtn.innerHTML = '<i class="fa-solid fa-stop text-[10px]"></i>';
     requestAnimationFrame(tick);
   }
   function stop() {
     if (!playing) return;
     try { playing.src.stop(); } catch (e) { /* ya terminó */ }
-    if (playing.track.playBtn) playing.track.playBtn.innerHTML = '<i class="fa-solid fa-play text-xs"></i>';
+    if (playing.track.playBtn) playing.track.playBtn.innerHTML = '<i class="fa-solid fa-play text-[10px]"></i>';
     playing = null; draw();
     if (window.Fonetica && Fonetica.current()) Fonetica.drawCursor(null);
   }
@@ -393,11 +392,12 @@
       const z = ZONE[m.zona];
       const b = document.createElement('button');
       b.type = 'button';
-      b.className = 'pitch-sample text-left px-3 py-2 rounded-xl text-white shadow-sm transition-all hover:opacity-100 ring-white';
+      b.className = 'pitch-sample flex-none whitespace-nowrap px-2.5 py-1 rounded-lg text-white shadow-sm transition-all hover:opacity-100 ring-white';
       b.style.background = z.color; b.style.opacity = '.82';
       b.style.setProperty('--tw-ring-color', z.color);
       const frag = m.texto.split(/[,.;!?]/).map(x => x.trim()).filter(x => x.split(' ').length >= 2)[0] || m.texto;
-      b.innerHTML = `<span class="block font-mono text-[11px] font-bold">${m.id} · ${m.lugar}</span><span class="block text-xs leading-tight max-w-[220px] truncate">«${frag}»</span>`;
+      b.innerHTML = `<span class="font-mono text-[11px] font-bold mr-1">${m.id}</span><span class="text-xs">${m.lugar}</span>`;
+      b.title = `«${frag}»`;
       b.addEventListener('click', () => {
         const t = tracks.find(t => t.sampleId === m.id);
         if (t && window.Fonetica && Fonetica.current() === t) { removeTrack(t); refreshChips(); }
@@ -451,6 +451,12 @@
   });
 
   if (alignEl) alignEl.addEventListener('change', draw);
+  const labPlay = document.getElementById('lab-play');
+  if (labPlay) labPlay.addEventListener('click', () => {
+    const t = window.Fonetica && Fonetica.current();
+    if (!t) return;
+    if (playing && playing.track === t) stop(); else play(t, 1);
+  });
   window.addEventListener('resize', resize);
   resize(); renderList();
 

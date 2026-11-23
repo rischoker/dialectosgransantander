@@ -74,7 +74,7 @@
 
   /* ---------- Dibujo estático ---------- */
   host.innerHTML = `
-  <svg viewBox="0 0 400 340" class="w-full h-auto select-none" role="img" aria-label="Corte sagital del aparato fonador">
+  <svg viewBox="0 0 400 340" class="w-full h-auto select-none" style="max-height:38vh;display:block;margin:0 auto" role="img" aria-label="Corte sagital del aparato fonador">
     <defs>
       <marker id="fz-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
         <path d="M0,0 L10,5 L0,10 z" fill="#0EA5E9"/></marker>

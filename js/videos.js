@@ -3,7 +3,8 @@
 (function () {
   const V = (window.MUESTRAS && window.MUESTRAS.videos) || {};
   const frame = document.getElementById('video-player-frame');
-  const list = document.getElementById('video-transcript');
+  // Las transcripciones viven en las tarjetas de diálogo de la izquierda (una por subzona)
+  const listFor = (z) => document.querySelector(`.vtx[data-zone="${z}"] .vtx-list`);
   const src = document.getElementById('video-source');
   if (!frame) return;
   const COLORS = { 1: '#F43F5E', 2: '#F97316', 3: '#10B981', 4: '#F59E0B', 5: '#14B8A6' };
@@ -28,6 +29,32 @@
     if (window.cargarMuestra) setTimeout(() => window.cargarMuestra(id), 350);
   }
 
+  let filled = false;
+  function fillTranscripts() {
+    if (filled) return;
+    Object.keys(V).forEach(z => {
+      const lst = listFor(z); if (!lst) return;
+      filled = true;
+      const d = V[z];
+      lst.innerHTML = d.cues.map((c, i) => `
+        <div class="vid-cue flex items-start gap-2 rounded-lg px-2 py-1 cursor-pointer transition-colors hover:bg-white/10" data-i="${i}">
+          <span class="font-mono text-[10px] text-slate-500 pt-0.5 w-8 flex-none">${Math.floor(c.ini / 60)}:${String(Math.floor(c.ini % 60)).padStart(2, '0')}</span>
+          <span class="flex-1 text-[13px] text-slate-300 leading-snug">${esc(c.t)}</span>
+          ${c.muestra ? `<button type="button" class="vid-an flex-none text-[10px] font-mono font-bold px-2 py-0.5 rounded-md text-white" style="background:${COLORS[z]}" data-m="${c.muestra}" title="Ver el análisis fonético de esta frase">Analizar ${c.muestra}</button>` : ''}
+        </div>`).join('') + (d.parcial ? '<p class="text-[10px] font-mono text-slate-500 px-2 pt-1">La transcripción cubre solo una parte del video.</p>' : '');
+      lst.querySelectorAll('.vid-cue').forEach(el => el.addEventListener('click', (e) => {
+        const btn = e.target.closest('.vid-an');
+        if (btn) { e.stopPropagation(); analyze(btn.dataset.m); return; }
+        const c = d.cues[+el.dataset.i];
+        if (current !== +z || !video) load(+z);
+        const go = () => { video.currentTime = c.ini + 0.01; video.play().catch(() => {}); };
+        if (video.readyState >= 1) go(); else video.addEventListener('loadedmetadata', go, { once: true });
+        const box = frame.closest('.lg\\:col-span-5') || frame;
+        if (box.getBoundingClientRect().top < 0 || box.getBoundingClientRect().bottom > innerHeight) box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }));
+    });
+  }
+
   function load(id) {
     current = id; tabs(id); stopAt = null;
     if (video) { video.pause(); video = null; }
@@ -42,32 +69,24 @@
           <button onclick="speakSubzoneSpeech(${id})" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-mono text-xs font-bold flex items-center gap-1.5">
             <i class="fa-solid fa-volume-high"></i><span>Escuchar el diálogo (voz sintética)</span></button>
         </div>`;
-      list.innerHTML = '';
       src.textContent = sub ? sub.title : '';
       return;
     }
     frame.innerHTML = `
-      <video playsinline controls preload="metadata" poster="videos/subzona-${id}-frag.jpg" class="block w-full max-h-[420px] bg-black object-contain">
+      <video playsinline controls preload="metadata" poster="videos/subzona-${id}-frag.jpg" class="block w-full h-[62vh] min-h-[340px] max-h-[760px] bg-black object-contain">
         <source src="${d.src}" type="video/mp4">
       </video>
       <div class="vid-sub pointer-events-none absolute left-3 right-3 bottom-14 text-center"><span class="hidden"></span></div>`;
     video = frame.querySelector('video');
     const sub = frame.querySelector('.vid-sub span');
+    // Videos horizontales: altura según su proporción (sin franjas negras); verticales: alto fijo
+    video.addEventListener('loadedmetadata', () => {
+      if (video.videoWidth > video.videoHeight) { video.style.height = 'auto'; video.style.minHeight = '0'; video.style.aspectRatio = `${video.videoWidth} / ${video.videoHeight}`; }
+    }, { once: true });
 
-    list.innerHTML = d.cues.map((c, i) => `
-      <div class="vid-cue group flex items-start gap-2 rounded-lg px-2 py-1.5 cursor-pointer transition-colors hover:bg-white/10" data-i="${i}">
-        <span class="font-mono text-[10px] text-slate-500 pt-0.5 w-9 flex-none">${Math.floor(c.ini / 60)}:${String(Math.floor(c.ini % 60)).padStart(2, '0')}</span>
-        <span class="flex-1 text-[13px] text-slate-200 leading-snug">${esc(c.t)}</span>
-        ${c.muestra ? `<button type="button" class="vid-an flex-none text-[10px] font-mono font-bold px-2 py-0.5 rounded-md text-white" style="background:${COLORS[id]}" data-m="${c.muestra}" title="Ver el análisis fonético de esta frase">Analizar ${c.muestra}</button>` : ''}
-      </div>`).join('') +
-      (d.parcial ? '<p class="text-[10px] font-mono text-slate-500 px-2 pt-1">La transcripción cubre solo una parte del video.</p>' : '');
-    cueEls = Array.from(list.querySelectorAll('.vid-cue'));
-    cueEls.forEach(el => el.addEventListener('click', (e) => {
-      const btn = e.target.closest('.vid-an');
-      if (btn) { e.stopPropagation(); analyze(btn.dataset.m); return; }
-      const c = d.cues[+el.dataset.i];
-      video.currentTime = c.ini + 0.01; video.play();
-    }));
+    fillTranscripts();
+    document.querySelectorAll('.vid-cue').forEach(el => { el.style.background = ''; const t = el.querySelector('.flex-1'); if (t) t.classList.remove('text-white'); });
+    cueEls = listFor(id) ? Array.from(listFor(id).querySelectorAll('.vid-cue')) : [];
     let last = -1;
     video.addEventListener('timeupdate', () => {
       const t = video.currentTime;
@@ -81,8 +100,11 @@
       if (i >= 0) {
         sub.textContent = d.cues[i].t;
         sub.className = 'inline-block bg-black/75 text-white text-sm sm:text-base font-semibold px-3 py-1 rounded-lg';
-        const el = cueEls[i];
-        list.scrollTo({ top: el.offsetTop - list.offsetTop - 40, behavior: 'smooth' });
+        const el = cueEls[i], lst = listFor(id);
+        if (lst) {
+          const det = lst.closest('details'); if (det && !det.open) det.open = true;
+          lst.scrollTo({ top: el.offsetTop - lst.offsetTop - 30, behavior: 'smooth' });
+        }
       } else sub.className = 'hidden';
     });
     src.innerHTML = `<i class="fa-solid fa-circle-info mr-1"></i>Fuente: ${esc(d.fuente)} Transcripción automática.`;

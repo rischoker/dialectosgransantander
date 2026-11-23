@@ -204,6 +204,9 @@
         <li><a href="#/tratamiento" data-goto="tratamiento" class="unit-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
           <span class="unit-num flex-none w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-[13px]"><i class="fa-solid fa-comments"></i></span>
           <span class="leading-tight">Tratamiento y voseo</span></a></li>
+        <li><a href="#/rasgos" data-goto="rasgos" class="unit-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+          <span class="unit-num flex-none w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-[13px]"><i class="fa-solid fa-feather-pointed"></i></span>
+          <span class="leading-tight">Rasgos fonéticos y morfología</span></a></li>
         <li><a href="#/laboratorio" data-goto="laboratorio" class="unit-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
           <span class="unit-num flex-none w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-[13px]"><i class="fa-solid fa-wave-square"></i></span>
           <span class="leading-tight">Laboratorio fonético</span></a></li>
@@ -762,7 +765,7 @@
   </section>
   </div><!-- /u-tratamiento -->
 
-  <div class="unit" id="u-laboratorio" data-unit="laboratorio" data-title="Laboratorio fonético" data-icon="fa-wave-square">
+  <div class="unit" id="u-rasgos" data-unit="rasgos" data-title="Rasgos fonéticos y morfología" data-icon="fa-feather-pointed">
   <!-- 6. NIVEL FONÉTICO Y MORFOSINTÁCTICO (Diapositivas 7 y 8) -->
   <section id="fonetica" class="py-20 px-6 md:px-12 max-w-7xl mx-auto">
     <div class="text-center max-w-3xl mx-auto mb-12 fade-up">
@@ -823,116 +826,6 @@
     </div>
 
     <!-- Líneas de entonación (curva melódica real a partir de audio) -->
-    <div id="entonacion" class="bg-white border border-tarjeta-borde rounded-3xl p-6 md:p-8 shadow-sm mb-12 fade-up scroll-mt-24">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-5 border-b border-tarjeta-borde mb-5">
-        <div class="max-w-2xl">
-          <h3 class="font-serif font-bold text-2xl text-pizarra">Líneas de entonación</h3>
-          <p class="text-sm text-pizarra-light">La línea sube y baja con la melodía de la voz. Elige hasta tres muestras reales de las subzonas para compararlas, o graba tu propia voz.</p>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <div class="inline-flex rounded-xl bg-pergamino-dark p-1 gap-1" role="group" aria-label="Cuántas voces ver">
-            <button type="button" data-mode="una" class="pitch-mode px-3 py-1.5 rounded-lg text-xs font-mono font-bold">Una voz</button>
-            <button type="button" data-mode="comparar" class="pitch-mode px-3 py-1.5 rounded-lg text-xs font-mono font-bold">Comparar</button>
-          </div>
-          <button type="button" id="pitch-rec" class="px-4 py-2 rounded-xl text-xs font-mono font-bold bg-terracota text-white shadow-sm hover:bg-terracota-dark transition-all inline-flex items-center gap-2">
-            <i class="fa-solid fa-microphone"></i><span>Grabar mi voz</span>
-          </button>
-        </div>
-      </div>
-
-      <div id="pitch-samples" class="flex flex-wrap gap-2 mb-5" role="group" aria-label="Muestras de audio por subzona"></div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div class="lg:col-span-8">
-          <div class="relative bg-verde-oscuro rounded-2xl overflow-hidden">
-            <canvas id="pitch-canvas" class="block w-full h-[260px] sm:h-[300px]" aria-label="Gráfica de la curva de entonación"></canvas>
-            <div id="pitch-empty" class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 text-slate-300 text-sm pointer-events-none">
-              <i class="fa-solid fa-wave-square text-3xl text-ocre-dorado mb-3"></i>
-              <span>Elige una muestra para ver su línea de entonación.</span>
-            </div>
-            <div id="pitch-busy" class="hidden absolute inset-0 bg-verde-oscuro/80 flex items-center justify-center text-amber-300 font-mono text-xs">
-              <i class="fa-solid fa-circle-notch fa-spin mr-2"></i><span>Analizando la voz…</span>
-            </div>
-          </div>
-          <div class="flex flex-wrap items-center justify-between gap-3 mt-3">
-            <label class="inline-flex items-center gap-2 text-xs text-pizarra-light cursor-pointer">
-              <input type="checkbox" id="pitch-align" checked class="accent-terracota">
-              Igualar la duración de las frases
-            </label>
-            <span class="text-[11px] font-mono text-pizarra-light">Eje vertical: semitonos respecto al tono medio de cada hablante</span>
-          </div>
-        </div>
-        <div class="lg:col-span-4 flex flex-col gap-3">
-          <div id="pitch-tracks" class="flex flex-col gap-2"></div>
-          <div class="bg-pergamino border border-tarjeta-borde rounded-2xl p-4 text-xs text-pizarra-light leading-relaxed">
-            <strong class="text-pizarra block mb-1">¿Cómo leer la línea?</strong>
-            Subidas y bajadas grandes y rápidas indican una melodía marcada; una línea más plana, una melodía más suave. Fíjate sobre todo en el <em>final</em> de cada frase: si sube y luego cae, es una curva circunfleja.
-            <span class="block mt-2 text-[11px]">El análisis se hace en tu navegador; el audio no se envía a ningún servidor. Es una medida aproximada: funciona mejor con frases cortas y sin ruido de fondo.</span>
-          </div>
-        </div>
-      </div>
-      <!-- Análisis fonético automático -->
-      <div id="fon-panel" class="hidden mt-8 pt-6 border-t border-tarjeta-borde">
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-3 mb-4">
-          <div>
-            <h4 class="font-serif font-bold text-xl text-pizarra">Análisis fonético</h4>
-            <p class="text-xs text-pizarra-light max-w-xl">Espectrograma de la voz y segmentación automática por modo de articulación. Las líneas blancas sobre las vocales son sus formantes F1 y F2.</p>
-          </div>
-          <div id="fon-track-chips" class="flex flex-wrap gap-1.5"></div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div class="lg:col-span-8">
-            <div class="bg-verde-oscuro rounded-2xl p-2">
-              <canvas id="fon-spec" class="block w-full h-[250px] sm:h-[290px] cursor-pointer" aria-label="Espectrograma y segmentos fonéticos; toca un segmento para ver su descripción"></canvas>
-            </div>
-            <div id="fon-legend" class="flex flex-wrap gap-x-4 gap-y-1.5 mt-3"></div>
-            <p id="fon-source" class="mt-2 text-[11px] text-pizarra-light leading-relaxed"></p>
-          </div>
-          <div class="lg:col-span-4 flex flex-col gap-3">
-            <div id="fon-info" class="bg-white border-2 border-terracota/30 rounded-2xl p-4 min-h-[120px]"></div>
-            <div class="bg-pergamino border border-tarjeta-borde rounded-2xl p-3">
-              <div class="text-[10px] font-mono uppercase tracking-wider text-pizarra-light mb-1">Trapecio vocálico (vocales medidas)</div>
-              <canvas id="fon-vowels" class="block w-full h-[170px]" aria-label="Vocales medidas ubicadas en el trapecio vocálico"></canvas>
-            </div>
-          </div>
-        </div>
-
-        <div id="fon-profile" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mt-5"></div>
-
-        <div class="mt-5 grid grid-cols-1 lg:grid-cols-12 gap-5">
-          <div class="lg:col-span-7 bg-white border border-tarjeta-borde rounded-2xl p-4">
-          <div class="flex flex-col md:flex-row gap-3 md:items-center">
-            <label class="text-xs font-mono font-bold text-pizarra whitespace-nowrap" for="fon-text">¿Qué dice?</label>
-            <input id="fon-text" type="text" placeholder="Escribe la frase del audio…" class="flex-1 bg-pergamino border border-tarjeta-borde rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-terracota">
-            <select id="fon-dialect" class="bg-pergamino border border-tarjeta-borde rounded-xl px-3 py-2 text-xs font-mono">
-              <option value="interior">Realización: interior (/s/ plena)</option>
-              <option value="caribe">Realización: Ocaña / Magdalena (/s/ → [h])</option>
-            </select>
-            <label class="inline-flex items-center gap-1.5 text-xs text-pizarra-light whitespace-nowrap"><input id="fon-delision" type="checkbox" class="accent-terracota"> /-d-/ elidida (-ao)</label>
-          </div>
-          <div id="fon-ipa" class="mt-4 flex flex-wrap"></div>
-          <div id="fon-ph-card" class="text-xs text-pizarra-light min-h-[24px]">Toca un símbolo para ver su lugar y modo de articulación.</div>
-          <div id="fon-compare" class="mt-3 text-xs text-pizarra leading-relaxed"></div>
-        </div>
-          <div class="lg:col-span-5 bg-white border border-tarjeta-borde rounded-2xl p-4" id="fonador-card">
-            <div class="flex items-center justify-between gap-2 mb-2">
-              <div class="text-[10px] font-mono uppercase tracking-wider text-pizarra-light">Aparato fonador</div>
-              <div class="flex gap-1.5">
-                <button type="button" id="fonador-labels" class="px-2 py-1 rounded-lg text-[11px] font-mono bg-pergamino-dark text-pizarra hover:bg-tarjeta-borde" aria-pressed="true">Nombres</button>
-                <button type="button" id="fonador-walk" class="px-2 py-1 rounded-lg text-[11px] font-mono bg-pergamino-dark text-pizarra hover:bg-tarjeta-borde"><i class="fa-solid fa-shoe-prints mr-1"></i>Sonido a sonido</button>
-                <button type="button" id="fonador-slow" class="px-2 py-1 rounded-lg text-[11px] font-mono bg-terracota text-white hover:bg-terracota-dark"><i class="fa-solid fa-play mr-1"></i>Con audio lento</button>
-              </div>
-            </div>
-            <div id="fonador-svg" class="w-full"></div>
-            <div id="fonador-info" class="mt-2 min-h-[48px]"></div>
-            <p class="mt-2 text-[10px] text-pizarra-light leading-snug">Esquema articulatorio a partir de la transcripción: muestra cómo se produce cada sonido, no la boca real de quien habla.</p>
-          </div>
-        </div>
-        <p class="mt-3 text-[11px] text-pizarra-light">Análisis acústico automático y aproximado (FFT, LPC y YIN en el navegador). En español de Colombia hay seseo: la <em>z</em> y la <em>c</em> suenan [s], así que la fricativa interdental sorda [θ] del centro de España no aparece; la interdental que sí aparece es la aproximante [ð] de <em>cada</em> o <em>todo</em>.</p>
-      </div>
-    </div>
-
     <!-- 4 Tarjetas de Morfosintaxis Compartida -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 fade-up">
       <div class="bg-white border border-tarjeta-borde rounded-2xl p-6 hover:border-terracota transition-all shadow-sm">
@@ -972,7 +865,123 @@
       </div>
     </div>
   </section>
+  </div><!-- /u-rasgos -->
+  <div class="unit" id="u-laboratorio" data-unit="laboratorio" data-title="Laboratorio fonético" data-icon="fa-wave-square">
+  <!-- LABORATORIO EN UNA VISTA: entonación + espectrograma + aparato fonador -->
+  <section id="laboratorio" class="px-3 lg:px-5 pt-3 lg:pt-4 pb-6">
+    <div id="entonacion" class="flex flex-col gap-3 scroll-mt-16">
+      <!-- Barra superior: muestras y controles -->
+      <div class="flex flex-wrap items-center gap-2 bg-white border border-tarjeta-borde rounded-2xl px-3 py-2 shadow-sm">
+        <div class="flex items-center gap-2 pr-2 mr-1 border-r border-tarjeta-borde">
+          <i class="fa-solid fa-wave-square text-terracota"></i>
+          <span class="font-serif font-bold text-pizarra whitespace-nowrap">Laboratorio fonético</span>
+        </div>
+        <div id="pitch-samples" class="flex-1 min-w-0 flex gap-1.5 overflow-x-auto py-0.5" role="group" aria-label="Muestras de audio por subzona"></div>
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <div class="inline-flex rounded-xl bg-pergamino-dark p-1 gap-1" role="group" aria-label="Cuántas voces ver">
+            <button type="button" data-mode="una" class="pitch-mode px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold">Una voz</button>
+            <button type="button" data-mode="comparar" class="pitch-mode px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold">Comparar</button>
+          </div>
+          <button type="button" id="lab-play" class="px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-verde-rio text-white hover:bg-verde-oscuro inline-flex items-center gap-1.5"><i class="fa-solid fa-play"></i><span>Reproducir</span></button>
+          <button type="button" id="fonador-slow" class="px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-terracota text-white hover:bg-terracota-dark inline-flex items-center gap-1.5"><i class="fa-solid fa-gauge-simple"></i><span>Lento</span></button>
+          <button type="button" id="fonador-walk" class="px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-pergamino-dark text-pizarra hover:bg-tarjeta-borde inline-flex items-center gap-1.5"><i class="fa-solid fa-shoe-prints"></i><span>Sonido a sonido</span></button>
+          <button type="button" id="pitch-rec" class="px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-pergamino-dark text-pizarra hover:bg-tarjeta-borde inline-flex items-center gap-1.5"><i class="fa-solid fa-microphone"></i><span>Grabar mi voz</span></button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-3">
+        <!-- Columna izquierda: entonación y espectrograma -->
+        <div class="lg:col-span-7 flex flex-col gap-3 min-w-0">
+          <div class="bg-white border border-tarjeta-borde rounded-2xl p-3 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-pizarra-light">1 · Líneas de entonación <span class="normal-case tracking-normal">(semitonos)</span></span>
+              <div id="pitch-tracks" class="flex flex-wrap gap-1.5"></div>
+            </div>
+            <div class="relative bg-verde-oscuro rounded-xl overflow-hidden">
+              <canvas id="pitch-canvas" class="block w-full h-[24vh] min-h-[170px]" aria-label="Gráfica de la curva de entonación"></canvas>
+              <div id="pitch-empty" class="absolute inset-0 flex flex-col items-center justify-center text-center px-6 text-slate-300 text-sm pointer-events-none">
+                <i class="fa-solid fa-wave-square text-3xl text-ocre-dorado mb-3"></i>
+                <span>Elige una muestra para ver su línea de entonación.</span>
+              </div>
+              <div id="pitch-busy" class="hidden absolute inset-0 bg-verde-oscuro/80 flex items-center justify-center text-amber-300 font-mono text-xs">
+                <i class="fa-solid fa-circle-notch fa-spin mr-2"></i><span>Analizando la voz…</span>
+              </div>
+              <label class="absolute top-2 right-3 inline-flex items-center gap-1.5 text-[10px] font-mono text-slate-300 cursor-pointer bg-black/30 rounded-md px-1.5 py-0.5">
+                <input type="checkbox" id="pitch-align" checked class="accent-terracota"> igualar duración
+              </label>
+            </div>
+          </div>
+
+          <div id="fon-panel" class="bg-white border border-tarjeta-borde rounded-2xl p-3 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-pizarra-light">2 · Análisis fonético <span class="normal-case tracking-normal">(espectrograma; toca una palabra o un segmento)</span></span>
+              <div id="fon-track-chips" class="flex flex-wrap gap-1.5"></div>
+            </div>
+            <div class="bg-verde-oscuro rounded-xl p-1.5">
+              <canvas id="fon-spec" class="block w-full h-[25vh] min-h-[180px] cursor-pointer" aria-label="Espectrograma y segmentos fonéticos; toca un segmento para ver su descripción"></canvas>
+            </div>
+            <div class="grid grid-cols-1 xl:grid-cols-5 gap-2 mt-2">
+              <div id="fon-legend" class="xl:col-span-2 flex flex-wrap gap-x-3 gap-y-1 content-start"></div>
+              <div id="fon-info" class="xl:col-span-3 bg-pergamino border border-tarjeta-borde rounded-xl px-3 py-2 text-xs max-h-[13vh] overflow-y-auto"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna derecha: aparato fonador y transcripción -->
+        <div class="lg:col-span-5 flex flex-col gap-3 min-w-0">
+          <div class="bg-white border border-tarjeta-borde rounded-2xl p-3 shadow-sm" id="fonador-card">
+            <div class="flex items-center justify-between gap-2 mb-1">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-pizarra-light">3 · Aparato fonador</span>
+              <button type="button" id="fonador-labels" class="px-2 py-0.5 rounded-lg text-[11px] font-mono bg-pergamino-dark text-pizarra hover:bg-tarjeta-borde" aria-pressed="true">Nombres</button>
+            </div>
+            <div id="fonador-svg" class="w-full"></div>
+            <div id="fonador-info" class="mt-1 min-h-[44px]"></div>
+          </div>
+          <div class="bg-white border border-tarjeta-borde rounded-2xl p-3 shadow-sm">
+            <div class="flex flex-wrap gap-2 items-center">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-pizarra-light">4 · Transcripción (AFI)</span>
+              <select id="fon-dialect" class="ml-auto bg-pergamino border border-tarjeta-borde rounded-lg px-2 py-1 text-[11px] font-mono">
+                <option value="interior">/s/ plena (interior)</option>
+                <option value="caribe">/s/ → [h] (Ocaña, Magdalena)</option>
+              </select>
+              <label class="inline-flex items-center gap-1 text-[11px] text-pizarra-light whitespace-nowrap"><input id="fon-delision" type="checkbox" class="accent-terracota"> -ado → -ao</label>
+            </div>
+            <input id="fon-text" type="text" placeholder="Escribe la frase del audio…" aria-label="Frase del audio" class="mt-2 w-full bg-pergamino border border-tarjeta-borde rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-terracota">
+            <div id="fon-ipa" class="mt-2 flex flex-wrap max-h-[16vh] overflow-y-auto"></div>
+            <div id="fon-ph-card" class="text-[11px] text-pizarra-light min-h-[20px]">Toca un símbolo para ver su lugar y modo de articulación.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Más datos (debajo; no hace falta durante la reproducción) -->
+      <details class="bg-white border border-tarjeta-borde rounded-2xl shadow-sm group" open>
+        <summary class="cursor-pointer list-none px-4 py-3 flex items-center justify-between">
+          <span class="font-serif font-bold text-pizarra">Más datos del análisis</span>
+          <i class="fa-solid fa-chevron-down text-pizarra-light transition-transform group-open:rotate-180"></i>
+        </summary>
+        <div class="px-4 pb-4 grid grid-cols-1 lg:grid-cols-12 gap-4">
+          <div class="lg:col-span-8 flex flex-col gap-3">
+            <div id="fon-profile" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
+            <div id="fon-compare" class="text-xs text-pizarra leading-relaxed"></div>
+            <p id="fon-source" class="text-[11px] text-pizarra-light leading-relaxed"></p>
+          </div>
+          <div class="lg:col-span-4 flex flex-col gap-3">
+            <div class="bg-pergamino border border-tarjeta-borde rounded-2xl p-3">
+              <div class="text-[10px] font-mono uppercase tracking-wider text-pizarra-light mb-1">Trapecio vocálico (vocales medidas)</div>
+              <canvas id="fon-vowels" class="block w-full h-[170px]" aria-label="Vocales medidas ubicadas en el trapecio vocálico"></canvas>
+            </div>
+            <div class="bg-pergamino border border-tarjeta-borde rounded-2xl p-3 text-xs text-pizarra-light leading-relaxed">
+              <strong class="text-pizarra block mb-1">¿Cómo leer la línea de entonación?</strong>
+              Subidas y bajadas grandes y rápidas indican una melodía marcada; una línea más plana, una melodía más suave. Fíjate en el <em>final</em> de cada frase: si sube y luego cae, es una curva circunfleja.
+            </div>
+          </div>
+          <p class="lg:col-span-12 text-[11px] text-pizarra-light">Análisis acústico automático y aproximado (FFT, LPC y YIN en el navegador; el audio no sale de tu equipo). El aparato fonador es un esquema a partir de la transcripción, no la boca real de quien habla. En español de Colombia hay seseo: la <em>z</em> y la <em>c</em> suenan [s], así que la [θ] de España no aparece; la interdental que sí aparece es la aproximante [ð] de <em>cada</em> o <em>todo</em>.</p>
+        </div>
+      </details>
+    </div>
+  </section>
   </div><!-- /u-laboratorio -->
+
 
   <div class="unit" id="u-lexico" data-unit="lexico" data-title="Atlas léxico" data-icon="fa-book-open">
   <!-- 7. ATLAS LÉXICO, GASTRONÓMICO Y FRASEOLÓGICO FILTRABLE (Diapositiva 9) -->
@@ -1054,7 +1063,7 @@
         </div>
 
         <!-- REPRODUCTOR AUDIOVISUAL: videos reales por subzona con transcripción sincronizada -->
-        <div class="lg:col-span-5 bg-white/5 border border-white/15 rounded-3xl p-5 backdrop-blur-md flex flex-col shadow-2xl">
+        <div class="lg:col-span-5 bg-white/5 border border-white/15 rounded-3xl p-5 backdrop-blur-md flex flex-col shadow-2xl lg:sticky lg:top-4 self-start">
           <div class="flex items-center gap-2 mb-4 border-b border-white/10 pb-3">
             <i class="fa-solid fa-film text-terracota text-lg"></i>
             <h3 class="font-serif font-bold text-xl text-white">Reproductor audiovisual</h3>
@@ -1069,7 +1078,6 @@
 
           <div id="video-player-frame" class="relative w-full rounded-2xl bg-black border border-white/20 overflow-hidden mb-3"></div>
 
-          <div id="video-transcript" class="flex-1 min-h-0 max-h-[240px] overflow-y-auto pr-1 space-y-1"></div>
           <p id="video-source" class="mt-3 pt-3 border-t border-white/10 text-[11px] text-slate-400 leading-relaxed"></p>
         </div>
       </div>
@@ -1950,6 +1958,14 @@
           </div>
           <p class="text-sm text-slate-200 leading-relaxed">${d.html}</p>
           ${clip(d.id)}
+          ${(window.MUESTRAS && window.MUESTRAS.videos && window.MUESTRAS.videos[d.id]) ? `
+          <details class="vtx mt-3 rounded-xl bg-black/20 border border-white/10" data-zone="${d.id}">
+            <summary class="cursor-pointer list-none px-3 py-2 flex items-center justify-between text-xs text-slate-300 hover:text-white">
+              <span><i class="fa-solid fa-closed-captioning mr-1.5 text-ocre-dorado"></i>Lo que se dice en el video · ${window.MUESTRAS.videos[d.id].cues.length} líneas</span>
+              <i class="fa-solid fa-chevron-down text-[10px]"></i>
+            </summary>
+            <div class="vtx-list max-h-56 overflow-y-auto px-1 pb-2 space-y-0.5"></div>
+          </details>` : ''}
         </div>
       `).join('');
     }
@@ -2096,13 +2112,13 @@
   <!-- Atlas (globo) y líneas de entonación -->
   <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
-  <script src="data/geo-santander.js?v=202611231813"></script>
-  <script src="js/atlas.js?v=202611231813"></script>
-  <script src="data/muestras.js?v=202611231813"></script>
-  <script src="js/fonetica.js?v=202611231813"></script>
-  <script src="js/fonador.js?v=202611231813"></script>
-  <script src="js/entonacion.js?v=202611231813"></script>
-  <script src="js/shell.js?v=202611231813"></script>
-  <script src="js/videos.js?v=202611231813"></script>
+  <script src="data/geo-santander.js?v=202611231839"></script>
+  <script src="js/atlas.js?v=202611231839"></script>
+  <script src="data/muestras.js?v=202611231839"></script>
+  <script src="js/fonetica.js?v=202611231839"></script>
+  <script src="js/fonador.js?v=202611231839"></script>
+  <script src="js/entonacion.js?v=202611231839"></script>
+  <script src="js/shell.js?v=202611231839"></script>
+  <script src="js/videos.js?v=202611231839"></script>
 </body>
 </html>
