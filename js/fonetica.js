@@ -588,8 +588,7 @@
 
   function select(t, list) {
     current = t;
-    if (!t) { panel.classList.add('hidden'); return; }
-    panel.classList.remove('hidden');
+    if (!t) { info.innerHTML = ''; return; }
     specImg = buildSpecImage(t.fon);
     txt.value = t.transcript || '';
     selWord = null;
