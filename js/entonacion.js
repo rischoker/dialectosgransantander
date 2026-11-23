@@ -223,12 +223,15 @@
           <div class="font-semibold text-sm text-pizarra truncate"></div>
           <div class="text-[11px] font-mono text-pizarra-light">Rango ${t.range.toFixed(1)} st · Final ${t.shape}</div>
         </div>
+        <button type="button" class="pt-eye w-8 h-8 rounded-lg bg-pergamino-dark text-pizarra hover:bg-tarjeta-borde" aria-label="Mostrar u ocultar la línea" title="Mostrar u ocultar la línea"><i class="fa-solid ${t.hidden ? 'fa-eye-slash' : 'fa-eye'} text-xs"></i></button>
         <button type="button" class="pt-play w-8 h-8 rounded-lg bg-verde-rio text-white hover:bg-verde-oscuro" aria-label="Reproducir"><i class="fa-solid fa-play text-xs"></i></button>
         <button type="button" class="pt-del w-8 h-8 rounded-lg bg-pergamino-dark text-pizarra hover:bg-tarjeta-borde" aria-label="Quitar"><i class="fa-solid fa-xmark text-xs"></i></button>`;
       row.querySelector('.truncate').textContent = t.name;
       const playBtn = row.querySelector('.pt-play');
       playBtn.addEventListener('click', () => { if (playing && playing.track === t) stop(); else play(t); });
       row.querySelector('.pt-del').addEventListener('click', () => removeTrack(t));
+      row.querySelector('.pt-eye').addEventListener('click', () => { t.hidden = !t.hidden; renderList(); draw(); });
+      if (t.hidden) row.style.opacity = '.55';
       t.playBtn = playBtn;
       listEl.appendChild(row);
     });
@@ -298,6 +301,7 @@
     ctx.fillText(align ? 'final' : maxSpan.toFixed(1) + ' s', W - Rm, H - 10);
 
     tracks.forEach(t => {
+      if (t.hidden) return;
       // Energía (sombra suave)
       ctx.fillStyle = hexA(t.color, 0.10);
       ctx.beginPath(); ctx.moveTo(x(t, t.a), T + ph);
@@ -336,6 +340,23 @@
 
   /* ---------- Entradas ---------- */
 
+  /* ---------- Una voz o varias ---------- */
+  let mode = 'comparar';
+  function setMode(m) {
+    mode = m;
+    document.querySelectorAll('.pitch-mode').forEach(b => {
+      const on = b.dataset.mode === m;
+      b.className = 'pitch-mode px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-colors ' + (on ? 'bg-pizarra text-white' : 'text-pizarra hover:bg-tarjeta-borde');
+      b.setAttribute('aria-pressed', on);
+    });
+    if (m === 'una' && tracks.length > 1) {
+      const keep = (window.Fonetica && Fonetica.current()) || tracks[tracks.length - 1];
+      tracks.slice().forEach(t => { if (t !== keep) removeTrack(t); });
+    }
+    if (typeof refreshChips === 'function') refreshChips();
+  }
+  document.querySelectorAll('.pitch-mode').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+
   /* ---------- Muestras fijas de la página (data/muestras.js) ---------- */
   const MU = (window.MUESTRAS && window.MUESTRAS.muestras) || [];
   const samplesEl = document.getElementById('pitch-samples');
@@ -351,7 +372,8 @@
   }
   async function loadSample(m) {
     const existing = tracks.find(t => t.sampleId === m.id);
-    if (existing) { if (window.Fonetica) Fonetica.select(existing, tracks); return; }
+    if (existing) { existing.hidden = false; renderList(); draw(); if (window.Fonetica) Fonetica.select(existing, tracks); return; }
+    if (mode === 'una') tracks.slice().forEach(t => removeTrack(t));
     const z = ZONE[m.zona];
     const r = await fetch(m.archivo);
     if (!r.ok) { toast('No se pudo cargar la muestra ' + m.id); return; }
@@ -384,11 +406,8 @@
       chipFor[m.id] = b;
       samplesEl.appendChild(b);
     });
-    const empty = document.createElement('span');
-    empty.className = 'self-center text-[11px] font-mono text-pizarra-light';
-    empty.textContent = 'Subzona 2 (Vélez / Málaga): sin muestra todavía';
-    samplesEl.appendChild(empty);
   }
+  setMode('comparar');
   // Al llegar al laboratorio se cargan dos muestras contrastadas: interior (1a) y Ocaña (5a)
   let autoLoaded = false;
   const labIO = new IntersectionObserver(async (ents) => {
