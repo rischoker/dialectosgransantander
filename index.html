@@ -1829,6 +1829,28 @@
       const container = document.getElementById("dialogues-container");
       if (!container) return;
 
+      const MU = (window.MUESTRAS && window.MUESTRAS.muestras) || [];
+      const fmt = (t) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
+      const clip = (id) => {
+        const m = MU.find(x => x.zona === id);
+        if (!m || !(window.MUESTRAS.videos || {})[id]) return '';
+        const frase = m.texto.length > 60 ? m.texto.slice(0, 58).replace(/\s+\S*$/, '') + '…' : m.texto;
+        return `
+          <button type="button" onclick="playVideoFragment(${id})" class="group mt-3 w-full flex items-center gap-3 text-left rounded-xl bg-black/30 hover:bg-black/45 border border-white/10 hover:border-white/30 p-2 transition-all">
+            <span class="relative flex-none w-28 sm:w-32 aspect-video rounded-lg overflow-hidden bg-black">
+              <img src="videos/subzona-${id}-frag.jpg" alt="" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+              <span class="absolute inset-0 flex items-center justify-center bg-black/25 group-hover:bg-black/10 transition-colors">
+                <span class="w-9 h-9 rounded-full bg-terracota text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform"><i class="fa-solid fa-play text-xs ml-0.5"></i></span>
+              </span>
+              <span class="absolute bottom-1 right-1 bg-black/75 text-white font-mono text-[10px] px-1.5 rounded">${fmt(m.video.ini)}–${fmt(m.video.fin)}</span>
+            </span>
+            <span class="min-w-0">
+              <span class="block font-mono text-[10px] uppercase tracking-wider text-ocre-dorado mb-0.5">Fragmento real · ${m.lugar}</span>
+              <span class="block text-[13px] text-slate-200 leading-snug">«${frase}»</span>
+            </span>
+          </button>`;
+      };
+
       container.innerHTML = dialoguesData.map(d => `
         <div class="bg-white/5 border border-white/15 rounded-2xl p-5 backdrop-blur-sm hover:border-white/30 transition-all">
           <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
@@ -1841,6 +1863,7 @@
             </div>
           </div>
           <p class="text-sm text-slate-200 leading-relaxed">${d.html}</p>
+          ${clip(d.id)}
         </div>
       `).join('');
     }
@@ -1987,11 +2010,11 @@
   <!-- Atlas (globo) y líneas de entonación -->
   <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
-  <script src="data/geo-santander.js?v=202611221827"></script>
-  <script src="js/atlas.js?v=202611221827"></script>
-  <script src="data/muestras.js?v=202611221827"></script>
-  <script src="js/fonetica.js?v=202611221827"></script>
-  <script src="js/entonacion.js?v=202611221827"></script>
-  <script src="js/videos.js?v=202611221827"></script>
+  <script src="data/geo-santander.js?v=202611222117"></script>
+  <script src="js/atlas.js?v=202611222117"></script>
+  <script src="data/muestras.js?v=202611222117"></script>
+  <script src="js/fonetica.js?v=202611222117"></script>
+  <script src="js/entonacion.js?v=202611222117"></script>
+  <script src="js/videos.js?v=202611222117"></script>
 </body>
 </html>
