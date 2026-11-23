@@ -114,20 +114,21 @@
       padding: 1px 5px;
       font-weight: 700;
     }
+    /* Marcadores del corpus: colores distintos a los de las subzonas para no confundirlos */
     .hl-pronombre.active-hl {
-      background-color: rgba(217, 119, 6, 0.28);
-      color: #FCD34D;
-      border-bottom: 2px solid #F59E0B;
+      background-color: rgba(56, 189, 248, 0.22);
+      color: #BAE6FD;
+      border-bottom: 2px solid #38BDF8;
     }
     .hl-fonetica.active-hl {
-      background-color: rgba(16, 185, 129, 0.25);
-      color: #6EE7B7;
-      border-bottom: 2px solid #10B981;
+      background-color: rgba(167, 139, 250, 0.25);
+      color: #DDD6FE;
+      border-bottom: 2px solid #A78BFA;
     }
     .hl-lexico.active-hl {
-      background-color: rgba(244, 63, 94, 0.28);
-      color: #FDA4AF;
-      border-bottom: 2px solid #F43F5E;
+      background-color: rgba(253, 230, 138, 0.18);
+      color: #FEF3C7;
+      border-bottom: 2px solid #FCD34D;
     }
     /* Atlas (globo) */
     .atlas-step:hover { background: rgba(255,255,255,0.55); }
@@ -167,69 +168,74 @@
     @keyframes fzClose { 50% { transform: scale(1.35); } }
     .fz-trill #fz-mark { animation: fzTrill .07s linear infinite alternate; }
     @keyframes fzTrill { to { transform: translateY(2px); } }
+    /* Unidades tipo Encarta */
+    .unit { display: none; }
+    .unit.is-active { display: block; animation: unitIn .55s cubic-bezier(.16,1,.3,1); }
+    @keyframes unitIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+    .unit-link.is-active { background: rgba(184,74,39,.18); color: #fff; }
+    .unit-link.is-active .unit-num { background: #B84A27; color: #fff; }
+    body.sidebar-open #sidebar { transform: none; }
   </style>
 </head>
 
 <body class="bg-pergamino text-pizarra font-sans antialiased selection:bg-terracota selection:text-white">
 
-  <!-- BARRA SUPERIOR DE PROGRESO DE LECTURA -->
-  <div id="progress-bar" class="fixed top-0 left-0 h-1.5 bg-gradient-to-r from-terracota via-ocre-dorado to-verde-rio z-50 transition-all duration-150" style="width: 0%;"></div>
 
-  <!-- NAVEGACIÓN FLOTANTE PRINCIPAL -->
-  <header class="fixed top-2 left-0 right-0 z-40 px-4 md:px-8">
-    <div class="max-w-7xl mx-auto glass-nav border border-tarjeta-borde/90 rounded-2xl shadow-sm px-5 py-3.5 flex items-center justify-between">
-      <a href="#hero" class="flex items-center gap-3 group">
-        <span class="w-9 h-9 rounded-xl bg-terracota text-white flex items-center justify-center font-serif font-bold text-lg shadow-sm group-hover:scale-105 transition-transform">
-          V
-        </span>
-        <div class="flex flex-col">
-          <span class="font-serif font-bold text-base md:text-lg leading-tight text-pizarra">Voces del Oriente</span>
-          <span class="text-xs text-pizarra-light font-medium hidden sm:inline">Dialectología de los Santanderes</span>
-        </div>
-      </a>
-
-      <!-- Menú Desktop -->
-      <nav class="hidden lg:flex items-center gap-0.5 xl:gap-1 font-medium text-xs xl:text-sm text-pizarra-light whitespace-nowrap">
-        <a href="#atlas-globo" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Atlas</a>
-        <a href="#geohistoria" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Geohistoria</a>
-        <a href="#subzonas" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Subzonas</a>
-        <a href="#tratamiento" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Tratamiento</a>
-        <a href="#ocana-voseo" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Voseo</a>
-        <a href="#fonetica" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Fonética</a>
-        <a href="#atlas-lexico" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Léxico</a>
-        <a href="#corpus-videos" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Corpus</a>
-        <a href="#bibliografia" class="px-3 py-1.5 rounded-lg hover:bg-pergamino-dark hover:text-pizarra transition-colors">Bibliografía</a>
-      </nav>
-
-      <!-- CTA Móvil / Desktop -->
-      <div class="flex items-center gap-3">
-        <a href="#corpus-videos" class="hidden sm:inline-flex items-center gap-2 bg-verde-rio text-white text-xs font-semibold px-4 py-2 rounded-xl hover:bg-verde-oscuro transition-colors shadow-sm">
-          <i class="fa-solid fa-circle-play text-sm"></i>
-          <span>Ver Videos</span>
-        </a>
-
-        <button id="mobile-menu-btn" aria-label="Abrir menú de navegación" class="lg:hidden w-10 h-10 rounded-xl bg-pergamino-dark flex items-center justify-center text-pizarra hover:bg-tarjeta-borde transition-colors">
-          <i class="fa-solid fa-bars text-lg"></i>
-        </button>
-      </div>
+  <!-- NAVEGACIÓN TIPO ENCARTA: barra lateral con unidades -->
+  <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-[272px] bg-[#0E1E1B] border-r border-white/10 flex flex-col -translate-x-full lg:translate-x-0 transition-transform duration-300">
+    <a href="#/portada" data-goto="portada" class="flex items-center gap-3 px-5 pt-6 pb-5 border-b border-white/10">
+      <span class="w-10 h-10 rounded-xl bg-terracota text-white flex items-center justify-center font-serif font-bold text-lg shadow">V</span>
+      <span class="flex flex-col"><span class="font-serif font-bold text-white leading-tight">Voces del Oriente</span><span class="text-[11px] text-slate-400">Atlas dialectal de los Santanderes</span></span>
+    </a>
+    <div class="px-5 pt-4 pb-2 text-[10px] font-mono uppercase tracking-widest text-slate-500">Unidades</div>
+    <nav class="flex-1 overflow-y-auto px-3 pb-4"><ol class="space-y-0.5">
+        <li><a href="#/portada" data-goto="portada" class="unit-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+          <span class="unit-num flex-none w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-[13px]"><i class="fa-solid fa-house"></i></span>
+          <span class="leading-tight">Portada</span></a></li>
+        <li><a href="#/atlas" data-goto="atlas" class="unit-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+          <span class="unit-num flex-none w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-[13px]"><i class="fa-solid fa-earth-americas"></i></span>
+          <span class="leading-tight">Atlas: del globo al Santander</span></a></li>
+        <li><a href="#/geohistoria" data-goto="geohistoria" class="unit-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+          <span class="unit-num flex-none w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-[13px]"><i class="fa-solid fa-landmark"></i></span>
+          <span class="leading-tight">Geohistoria</span></a></li>
+        <li><a href="#/subzonas" data-goto="subzonas" class="unit-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+          <span class="unit-num flex-none w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-[13px]"><i class="fa-solid fa-map-location-dot"></i></span>
+          <span class="leading-tight">Las 5 subzonas</span></a></li>
+        <li><a href="#/tratamiento" data-goto="tratamiento" class="unit-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+          <span class="unit-num flex-none w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-[13px]"><i class="fa-solid fa-comments"></i></span>
+          <span class="leading-tight">Tratamiento y voseo</span></a></li>
+        <li><a href="#/laboratorio" data-goto="laboratorio" class="unit-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+          <span class="unit-num flex-none w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-[13px]"><i class="fa-solid fa-wave-square"></i></span>
+          <span class="leading-tight">Laboratorio fonético</span></a></li>
+        <li><a href="#/lexico" data-goto="lexico" class="unit-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+          <span class="unit-num flex-none w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-[13px]"><i class="fa-solid fa-book-open"></i></span>
+          <span class="leading-tight">Atlas léxico</span></a></li>
+        <li><a href="#/corpus" data-goto="corpus" class="unit-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+          <span class="unit-num flex-none w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-[13px]"><i class="fa-solid fa-film"></i></span>
+          <span class="leading-tight">Corpus y videos</span></a></li>
+        <li><a href="#/bibliografia" data-goto="bibliografia" class="unit-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+          <span class="unit-num flex-none w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-[13px]"><i class="fa-solid fa-book"></i></span>
+          <span class="leading-tight">Bibliografía</span></a></li>
+    </ol></nav>
+    <div class="px-4 py-4 border-t border-white/10 space-y-2">
+      <div class="h-1 rounded-full bg-white/10 overflow-hidden"><div id="unit-progress" class="h-full bg-gradient-to-r from-terracota to-ocre-dorado transition-all duration-500" style="width:0%"></div></div>
+      <button type="button" id="present-btn" class="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-semibold"><i class="fa-solid fa-expand"></i><span>Modo exposición</span></button>
+      <p class="text-[10px] text-slate-500 text-center font-mono">← → o Re Pág / Av Pág para cambiar de unidad</p>
     </div>
+  </aside>
+  <div id="sidebar-scrim" class="fixed inset-0 z-40 bg-black/50 hidden lg:hidden"></div>
+  <!-- Barra superior en celular -->
+  <div class="lg:hidden fixed top-0 inset-x-0 z-30 h-14 bg-[#0E1E1B]/95 backdrop-blur border-b border-white/10 flex items-center justify-between px-4">
+    <button type="button" id="sidebar-open" class="w-10 h-10 rounded-xl bg-white/10 text-white flex items-center justify-center" aria-label="Abrir unidades"><i class="fa-solid fa-bars"></i></button>
+    <span id="mobile-unit-title" class="font-serif font-bold text-white text-sm truncate px-3"></span>
+    <span class="w-10 h-10 rounded-xl bg-terracota text-white flex items-center justify-center font-serif font-bold">V</span>
+  </div>
+  <main id="units" class="lg:pl-[272px] pt-14 lg:pt-0">
 
-    <!-- Menú Desplegable Móvil -->
-    <div id="mobile-menu" class="hidden lg:hidden max-w-7xl mx-auto mt-2 glass-nav border border-tarjeta-borde rounded-2xl p-4 shadow-xl flex flex-col gap-2 font-medium text-sm">
-      <a href="#atlas-globo" class="mobile-nav-link p-2.5 rounded-lg hover:bg-pergamino-dark">Atlas: del globo al Santander</a>
-      <a href="#geohistoria" class="mobile-nav-link p-2.5 rounded-lg hover:bg-pergamino-dark">Geohistoria</a>
-      <a href="#subzonas" class="mobile-nav-link p-2.5 rounded-lg hover:bg-pergamino-dark">Las 5 Subzonas &amp; Mapa Real</a>
-      <a href="#tratamiento" class="mobile-nav-link p-2.5 rounded-lg hover:bg-pergamino-dark">Fórmulas de Tratamiento</a>
-      <a href="#ocana-voseo" class="mobile-nav-link p-2.5 rounded-lg hover:bg-pergamino-dark">El Voseo de Ocaña</a>
-      <a href="#fonetica" class="mobile-nav-link p-2.5 rounded-lg hover:bg-pergamino-dark">Fonética y Morfología</a>
-      <a href="#atlas-lexico" class="mobile-nav-link p-2.5 rounded-lg hover:bg-pergamino-dark">Atlas Léxico Filtrable</a>
-      <a href="#corpus-videos" class="mobile-nav-link p-2.5 rounded-lg hover:bg-pergamino-dark">Corpus Comparativo &amp; Videos</a>
-      <a href="#bibliografia" class="mobile-nav-link p-2.5 rounded-lg hover:bg-pergamino-dark">Bibliografía Académica</a>
-    </div>
-  </header>
 
+  <div class="unit" id="u-portada" data-unit="portada" data-title="Portada" data-icon="fa-house">
   <!-- 1. PORTADA CON PARALLAX Y ESTADÍSTICAS (Diapositiva 1) -->
-  <section id="hero" class="relative min-h-screen bg-verde-oscuro text-white pt-28 pb-16 px-6 md:px-12 flex flex-col justify-center overflow-hidden">
+  <section id="hero" class="relative min-h-screen bg-verde-oscuro text-white pt-12 lg:pt-16 pb-16 px-6 md:px-12 flex flex-col justify-center overflow-hidden">
     <!-- SVG Grid Background -->
     <div class="absolute inset-0 opacity-15 pointer-events-none">
       <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
@@ -265,7 +271,7 @@
         <div class="flex flex-wrap gap-4 items-center mb-10">
           <a href="#atlas-globo" class="px-6 py-3.5 rounded-xl bg-terracota text-white font-semibold hover:bg-terracota-dark transition-all shadow-lg hover:shadow-terracota/30 flex items-center gap-2">
             <i class="fa-solid fa-map-location-dot"></i>
-            <span>Explorar Mapa Dialectal</span>
+            <span>Entrar al atlas</span>
           </a>
           <a href="#corpus-videos" class="px-6 py-3.5 rounded-xl bg-white/10 border border-white/20 text-white font-semibold hover:bg-white/20 transition-all backdrop-blur-md flex items-center gap-2">
             <i class="fa-solid fa-circle-play text-ocre-dorado"></i>
@@ -322,7 +328,9 @@
       </div>
     </div>
   </section>
+  </div><!-- /u-portada -->
 
+  <div class="unit" id="u-atlas" data-unit="atlas" data-title="Atlas: del globo al Santander" data-icon="fa-earth-americas">
   <!-- 1b. ATLAS: DEL GLOBO AL GRAN SANTANDER -->
   <section id="atlas-globo" class="relative py-20 px-6 md:px-12 bg-pergamino-dark border-y border-tarjeta-borde scroll-mt-16 overflow-hidden">
     <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
@@ -373,7 +381,9 @@
       </div>
     </div>
   </section>
+  </div><!-- /u-atlas -->
 
+  <div class="unit" id="u-geohistoria" data-unit="geohistoria" data-title="Geohistoria" data-icon="fa-landmark">
   <!-- 2. MARCO GEOHISTÓRICO (Diapositiva 2) -->
   <section id="geohistoria" class="py-20 px-6 md:px-12 max-w-7xl mx-auto">
     <div class="text-center max-w-3xl mx-auto mb-16 fade-up">
@@ -434,7 +444,9 @@
       </div>
     </div>
   </section>
+  </div><!-- /u-geohistoria -->
 
+  <div class="unit" id="u-subzonas" data-unit="subzonas" data-title="Las 5 subzonas" data-icon="fa-map-location-dot">
   <!-- 3. ZONAS SUBDIALECTALES CON MAPA GEOGRÁFICO REAL + CÍRCULOS ANIMADOS + FOTOGRAFÍA DINÁMICA -->
   <section id="subzonas" class="py-20 px-6 md:px-12 bg-verde-oscuro text-white scroll-mt-16">
     <div class="max-w-7xl mx-auto">
@@ -605,7 +617,9 @@
       </div>
     </div>
   </section>
+  </div><!-- /u-subzonas -->
 
+  <div class="unit" id="u-tratamiento" data-unit="tratamiento" data-title="Tratamiento y voseo" data-icon="fa-comments">
   <!-- 4. PRAGMÁTICA PRONOMINAL Y VOCATIVOS DE IDENTIDAD (Diapositivas 4 y 5) -->
   <section id="tratamiento" class="py-20 px-6 md:px-12 max-w-7xl mx-auto">
     <div class="text-center max-w-3xl mx-auto mb-12 fade-up">
@@ -746,7 +760,9 @@
       </div>
     </div>
   </section>
+  </div><!-- /u-tratamiento -->
 
+  <div class="unit" id="u-laboratorio" data-unit="laboratorio" data-title="Laboratorio fonético" data-icon="fa-wave-square">
   <!-- 6. NIVEL FONÉTICO Y MORFOSINTÁCTICO (Diapositivas 7 y 8) -->
   <section id="fonetica" class="py-20 px-6 md:px-12 max-w-7xl mx-auto">
     <div class="text-center max-w-3xl mx-auto mb-12 fade-up">
@@ -814,6 +830,10 @@
           <p class="text-sm text-pizarra-light">La línea sube y baja con la melodía de la voz. Elige hasta tres muestras reales de las subzonas para compararlas, o graba tu propia voz.</p>
         </div>
         <div class="flex flex-wrap gap-2">
+          <div class="inline-flex rounded-xl bg-pergamino-dark p-1 gap-1" role="group" aria-label="Cuántas voces ver">
+            <button type="button" data-mode="una" class="pitch-mode px-3 py-1.5 rounded-lg text-xs font-mono font-bold">Una voz</button>
+            <button type="button" data-mode="comparar" class="pitch-mode px-3 py-1.5 rounded-lg text-xs font-mono font-bold">Comparar</button>
+          </div>
           <button type="button" id="pitch-rec" class="px-4 py-2 rounded-xl text-xs font-mono font-bold bg-terracota text-white shadow-sm hover:bg-terracota-dark transition-all inline-flex items-center gap-2">
             <i class="fa-solid fa-microphone"></i><span>Grabar mi voz</span>
           </button>
@@ -952,7 +972,9 @@
       </div>
     </div>
   </section>
+  </div><!-- /u-laboratorio -->
 
+  <div class="unit" id="u-lexico" data-unit="lexico" data-title="Atlas léxico" data-icon="fa-book-open">
   <!-- 7. ATLAS LÉXICO, GASTRONÓMICO Y FRASEOLÓGICO FILTRABLE (Diapositiva 9) -->
   <section id="atlas-lexico" class="py-20 px-6 md:px-12 bg-pergamino max-w-7xl mx-auto">
     <div class="text-center max-w-3xl mx-auto mb-12 fade-up">
@@ -998,7 +1020,9 @@
       <!-- Inyectado por JS -->
     </div>
   </section>
+  </div><!-- /u-lexico -->
 
+  <div class="unit" id="u-corpus" data-unit="corpus" data-title="Corpus y videos" data-icon="fa-film">
   <!-- 8. CORPUS COMPARATIVO & REPRODUCTOR DE VIDEO ROBUSTO (Diapositivas 10, 11 y 12) -->
   <section id="corpus-videos" class="py-20 px-6 md:px-12 bg-verde-oscuro text-white scroll-mt-16">
     <div class="max-w-7xl mx-auto">
@@ -1010,7 +1034,7 @@
           Corpus Comparativo y Laboratorio Audiovisual
         </h2>
         <p class="text-slate-300 text-base md:text-lg">
-          Compara cómo se realiza la misma escena (saludo del mediodía y queja por el calor) en las 5 subzonas y reproduce las muestras orales y en video.
+          Compara cómo se realiza la misma escena (saludo del mediodía y queja por el calor) en cuatro subzonas y escucha a hablantes reales en video.
         </p>
       </div>
 
@@ -1018,9 +1042,9 @@
       <div class="flex flex-wrap items-center justify-center gap-3 mb-10 fade-up">
         <span class="text-xs font-mono text-slate-400 mr-2">Resaltar marcadores:</span>
         <button onclick="toggleHighlight('all')" id="hlbtn-all" class="hl-btn px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold bg-ocre-dorado text-verde-oscuro">Ver Todos</button>
-        <button onclick="toggleHighlight('pronombre')" id="hlbtn-pronombre" class="hl-btn px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold bg-white/10 text-white border border-white/20 hover:bg-white/20">Pronombres</button>
-        <button onclick="toggleHighlight('fonetica')" id="hlbtn-fonetica" class="hl-btn px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold bg-white/10 text-white border border-white/20 hover:bg-white/20">Fonética (/-s/ y /-d-/)</button>
-        <button onclick="toggleHighlight('lexico')" id="hlbtn-lexico" class="hl-btn px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold bg-white/10 text-white border border-white/20 hover:bg-white/20">Léxico</button>
+        <button onclick="toggleHighlight('pronombre')" id="hlbtn-pronombre" class="hl-btn px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold bg-white/10 text-white border border-white/20 hover:bg-white/20"><span class="inline-block w-2 h-2 rounded-full mr-1.5" style="background:#38BDF8"></span>Pronombres</button>
+        <button onclick="toggleHighlight('fonetica')" id="hlbtn-fonetica" class="hl-btn px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold bg-white/10 text-white border border-white/20 hover:bg-white/20"><span class="inline-block w-2 h-2 rounded-full mr-1.5" style="background:#A78BFA"></span>Fonética (/-s/ y /-d-/)</button>
+        <button onclick="toggleHighlight('lexico')" id="hlbtn-lexico" class="hl-btn px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold bg-white/10 text-white border border-white/20 hover:bg-white/20"><span class="inline-block w-2 h-2 rounded-full mr-1.5" style="background:#FCD34D"></span>Léxico</button>
       </div>
 
       <!-- DIÁLOGOS COMPARATIVOS (5 SUBZONAS) + MÓDULO DE VIDEOS ROBUSTO -->
@@ -1038,7 +1062,6 @@
 
           <div class="flex flex-wrap gap-1.5 mb-4" id="video-subzone-tabs">
             <button onclick="loadVideoSubzone(1)" id="vidtab-1" class="vid-tab px-3 py-1.5 rounded-lg text-xs font-mono">1. Bucaramanga</button>
-            <button onclick="loadVideoSubzone(2)" id="vidtab-2" class="vid-tab px-3 py-1.5 rounded-lg text-xs font-mono">2. Sur / Vélez</button>
             <button onclick="loadVideoSubzone(3)" id="vidtab-3" class="vid-tab px-3 py-1.5 rounded-lg text-xs font-mono">3. Barrancabermeja</button>
             <button onclick="loadVideoSubzone(4)" id="vidtab-4" class="vid-tab px-3 py-1.5 rounded-lg text-xs font-mono">4. Cúcuta</button>
             <button onclick="loadVideoSubzone(5)" id="vidtab-5" class="vid-tab px-3 py-1.5 rounded-lg text-xs font-mono">5. Ocaña</button>
@@ -1052,7 +1075,9 @@
       </div>
     </div>
   </section>
+  </div><!-- /u-corpus -->
 
+  <div class="unit" id="u-bibliografia" data-unit="bibliografia" data-title="Bibliografía" data-icon="fa-book">
   <!-- 9. BIBLIOGRAFÍA ACADÉMICA Y CRÉDITOS (Diapositivas 13 y 14) -->
   <section id="bibliografia" class="py-20 px-6 md:px-12 max-w-7xl mx-auto">
     <div class="text-center max-w-3xl mx-auto mb-16 fade-up">
@@ -1100,6 +1125,9 @@
       </div>
     </div>
   </footer>
+  </div><!-- /u-bibliografia -->
+
+  </main>
 
   <!-- TOAST / NOTIFICACIÓN DE COPIADO -->
   <div id="toast-msg" class="fixed bottom-6 right-6 bg-pizarra text-white text-xs font-mono px-4 py-3 rounded-xl shadow-xl border border-white/20 transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2 pointer-events-none">
@@ -1867,7 +1895,7 @@
             <div>
               <div class="flex items-center justify-between gap-2 mb-3">
                 <span class="font-mono text-[11px] font-bold px-2.5 py-0.5 rounded-full ${meta.badge}">${meta.label}</span>
-                <span class="font-mono text-[11px] text-pizarra-light">${item.zone}</span>
+                <button type="button" onclick="irASubzona('${item.zone}')" title="Ver esta subzona en el mapa" class="font-mono text-[11px] text-pizarra-light hover:text-terracota underline decoration-dotted underline-offset-2"><i class="fa-solid fa-location-dot mr-1"></i>${item.zone}</button>
               </div>
               <h3 class="font-serif font-bold text-xl text-pizarra mb-2">${item.term}</h3>
               ${(item.pos || []).length ? `<div class="flex flex-wrap gap-1.5 mb-3">${item.pos.map(p => { const P = POS_LABELS[p.c]; return `<span title="${p.w}: ${p.d}" class="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-md border ${P.cls}">${item.pos.length > 1 ? `<span class="font-normal opacity-80">${p.w}</span> · ` : ''}${P.label}${p.g ? ` <span class="font-mono">${p.g}.</span>` : ''}</span>`; }).join('')}</div>` : ''}
@@ -1907,12 +1935,14 @@
           </button>`;
       };
 
-      container.innerHTML = dialoguesData.map(d => `
-        <div class="bg-white/5 border border-white/15 rounded-2xl p-5 backdrop-blur-sm hover:border-white/30 transition-all">
+      const ZONE_COLORS = { 1: '#F43F5E', 2: '#F97316', 3: '#10B981', 4: '#F59E0B', 5: '#14B8A6' };
+      // Vélez / Málaga (subzona 2) no tiene muestra real utilizable: no se muestra en el corpus
+      container.innerHTML = dialoguesData.filter(d => d.id !== 2).map(d => `
+        <div class="bg-white/5 border border-white/15 rounded-2xl p-5 backdrop-blur-sm hover:border-white/30 transition-all" style="border-left: 4px solid ${ZONE_COLORS[d.id]}">
           <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
             <h3 class="font-serif font-bold text-lg text-white">${d.zone}</h3>
             <div class="flex items-center gap-2">
-              <span class="font-mono text-[11px] px-2.5 py-0.5 rounded-full border ${d.badge}">${d.tag}</span>
+              <span class="font-mono text-[11px] px-2.5 py-0.5 rounded-full border bg-white/5 text-slate-300 border-white/15">${d.tag}</span>
               <button onclick="speakSubzoneSpeech(${d.id})" title="Escuchar diálogo" class="w-8 h-8 rounded-lg bg-terracota/80 hover:bg-terracota text-white flex items-center justify-center transition-colors">
                 <i class="fa-solid fa-volume-high text-xs"></i>
               </button>
@@ -2066,12 +2096,13 @@
   <!-- Atlas (globo) y líneas de entonación -->
   <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
-  <script src="data/geo-santander.js?v=202611222207"></script>
-  <script src="js/atlas.js?v=202611222207"></script>
-  <script src="data/muestras.js?v=202611222207"></script>
-  <script src="js/fonetica.js?v=202611222207"></script>
-  <script src="js/fonador.js?v=202611222207"></script>
-  <script src="js/entonacion.js?v=202611222207"></script>
-  <script src="js/videos.js?v=202611222207"></script>
+  <script src="data/geo-santander.js?v=202611231813"></script>
+  <script src="js/atlas.js?v=202611231813"></script>
+  <script src="data/muestras.js?v=202611231813"></script>
+  <script src="js/fonetica.js?v=202611231813"></script>
+  <script src="js/fonador.js?v=202611231813"></script>
+  <script src="js/entonacion.js?v=202611231813"></script>
+  <script src="js/shell.js?v=202611231813"></script>
+  <script src="js/videos.js?v=202611231813"></script>
 </body>
 </html>
