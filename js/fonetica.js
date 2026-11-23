@@ -518,6 +518,7 @@
   function showWord(w) {
     selWord = w; selSeg = null; drawSpec(); drawVowels();
     const ph = g2p(w.w, { aspirate: dial.value === 'caribe', dElision: dEl.checked })[0].ph;
+    if (window.Fonador) { const wi = current.words.indexOf(w); Fonador.sequence(ph.map((x, pi) => ({ p: x.p, wi, pi })), 520); }
     info.innerHTML = `
       <div class="flex items-baseline gap-2 mb-2"><strong class="font-serif text-lg text-pizarra">«${w.w}»</strong>
         <span class="font-mono text-sm text-terracota font-bold">[${ph.map(x => x.p).join('')}]</span>
@@ -546,14 +547,16 @@
     const text = txt.value.trim();
     if (!text) { ipaEl.innerHTML = '<p class="text-xs text-pizarra-light">Escribe lo que dice el audio para ver su transcripción fonética.</p>'; cmpEl.textContent = ''; return; }
     const words = g2p(text, { aspirate: dial.value === 'caribe', dElision: dEl.checked });
-    ipaEl.innerHTML = words.map(w => `
+    ipaEl.innerHTML = words.map((w, wi) => `
       <span class="inline-flex flex-col items-center mr-2 mb-2">
-        <span class="inline-flex">${w.ph.map(x => `<button type="button" class="fon-ph font-mono text-base font-bold px-1 rounded hover:bg-pergamino-dark" style="color:${MANNER_COLOR(x.p)};text-shadow:0 0 0 #1C2526" data-p="${x.p}">${x.p}</button>`).join('')}</span>
+        <span class="inline-flex">${w.ph.map((x, pi) => `<button type="button" data-wi="${wi}" data-pi="${pi}" class="fon-ph font-mono text-base font-bold px-1 rounded hover:bg-pergamino-dark" style="color:${MANNER_COLOR(x.p)};text-shadow:0 0 0 #1C2526" data-p="${x.p}">${x.p}</button>`).join('')}</span>
         <span class="text-[10px] text-pizarra-light">${w.word}</span>
       </span>`).join('');
     ipaEl.querySelectorAll('.fon-ph').forEach(b => b.addEventListener('click', () => {
       const d = IPA[b.dataset.p] || ['—', '—', '—'];
       document.getElementById('fon-ph-card').innerHTML = `<strong class="font-mono text-terracota text-lg mr-2">[${b.dataset.p}]</strong><span class="text-sm text-pizarra"><b>${d[0]}</b> · ${d[1]} · ${d[2]}</span>`;
+      if (window.Fonador) { Fonador.stop(); Fonador.show(b.dataset.p, { force: true }); }
+      highlightPhone(+b.dataset.wi, +b.dataset.pi);
     }));
     // Cada /s/ del texto frente a lo que se oye (si la muestra trae tiempos por palabra)
     if (current && current.words) {
@@ -615,5 +618,23 @@
   window.addEventListener('resize', () => { if (current) { drawSpec(); drawVowels(); } });
   renderIPA();
 
-  window.Fonetica = { analyze, select, g2p, drawCursor: (t) => drawSpec(t), current: () => current };
+  function highlightPhone(wi, pi) {
+    ipaEl.querySelectorAll('.fon-ph.fon-on').forEach(b => { b.classList.remove('fon-on'); b.style.background = ''; });
+    const b = ipaEl.querySelector(`.fon-ph[data-wi="${wi}"][data-pi="${pi}"]`);
+    if (b) { b.classList.add('fon-on'); b.style.background = '#FDE68A'; }
+  }
+  const opts = () => ({ aspirate: dial.value === 'caribe', dElision: dEl.checked });
+  function currentPhones() { return txt.value.trim() ? g2p(txt.value, opts()) : []; }
+  function drawCursor(t) {
+    drawSpec(t);
+    if (window.Fonador && current && current.words) {
+      if (t == null) { Fonador.show('·', { ms: 200, quiet: true }); highlightPhone(-1, -1); return; }
+      if (!current._wordPh || current._wordPhKey !== JSON.stringify(opts())) {
+        current._wordPh = current.words.map(w => g2p(w.w, opts())[0] || { ph: [] });
+        current._wordPhKey = JSON.stringify(opts());
+      }
+      Fonador.follow(t, current, current._wordPh);
+    }
+  }
+  window.Fonetica = { analyze, select, g2p, drawCursor, current: () => current, currentPhones, highlightPhone };
 })();

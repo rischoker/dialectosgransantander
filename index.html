@@ -154,6 +154,19 @@
     .atlas-pin:focus-visible .lbl { outline: 2px solid #B84A27; }
     @keyframes atlasPulse { 0% { transform: scale(.7); opacity: .9; } 100% { transform: scale(1.5); opacity: 0; } }
     @media (prefers-reduced-motion: reduce) { .atlas-pin .dot::after { animation: none; opacity: .4; } }
+    /* Aparato fonador */
+    #fz-air-oral, #fz-air-nasal { animation: fzAir 0.9s linear infinite; transition: opacity .25s; }
+    @keyframes fzAir { to { stroke-dashoffset: -24; } }
+    .fz-voiced #fz-fold-l { animation: fzFoldL .09s ease-in-out infinite alternate; }
+    .fz-voiced #fz-fold-r { animation: fzFoldR .09s ease-in-out infinite alternate; }
+    @keyframes fzFoldL { to { transform: translateX(-2.5px); } }
+    @keyframes fzFoldR { to { transform: translateX(2.5px); } }
+    .fz-fric { animation: fzFric .35s ease-in-out infinite alternate; }
+    @keyframes fzFric { from { opacity: .25; } to { opacity: 1; } }
+    .fz-close { animation: fzClose .9s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    @keyframes fzClose { 50% { transform: scale(1.35); } }
+    .fz-trill #fz-mark { animation: fzTrill .07s linear infinite alternate; }
+    @keyframes fzTrill { to { transform: translateY(2px); } }
   </style>
 </head>
 
@@ -867,7 +880,8 @@
 
         <div id="fon-profile" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mt-5"></div>
 
-        <div class="mt-5 bg-white border border-tarjeta-borde rounded-2xl p-4">
+        <div class="mt-5 grid grid-cols-1 lg:grid-cols-12 gap-5">
+          <div class="lg:col-span-7 bg-white border border-tarjeta-borde rounded-2xl p-4">
           <div class="flex flex-col md:flex-row gap-3 md:items-center">
             <label class="text-xs font-mono font-bold text-pizarra whitespace-nowrap" for="fon-text">¿Qué dice?</label>
             <input id="fon-text" type="text" placeholder="Escribe la frase del audio…" class="flex-1 bg-pergamino border border-tarjeta-borde rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-terracota">
@@ -880,6 +894,20 @@
           <div id="fon-ipa" class="mt-4 flex flex-wrap"></div>
           <div id="fon-ph-card" class="text-xs text-pizarra-light min-h-[24px]">Toca un símbolo para ver su lugar y modo de articulación.</div>
           <div id="fon-compare" class="mt-3 text-xs text-pizarra leading-relaxed"></div>
+        </div>
+          <div class="lg:col-span-5 bg-white border border-tarjeta-borde rounded-2xl p-4" id="fonador-card">
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <div class="text-[10px] font-mono uppercase tracking-wider text-pizarra-light">Aparato fonador</div>
+              <div class="flex gap-1.5">
+                <button type="button" id="fonador-labels" class="px-2 py-1 rounded-lg text-[11px] font-mono bg-pergamino-dark text-pizarra hover:bg-tarjeta-borde" aria-pressed="true">Nombres</button>
+                <button type="button" id="fonador-walk" class="px-2 py-1 rounded-lg text-[11px] font-mono bg-pergamino-dark text-pizarra hover:bg-tarjeta-borde"><i class="fa-solid fa-shoe-prints mr-1"></i>Sonido a sonido</button>
+                <button type="button" id="fonador-slow" class="px-2 py-1 rounded-lg text-[11px] font-mono bg-terracota text-white hover:bg-terracota-dark"><i class="fa-solid fa-play mr-1"></i>Con audio lento</button>
+              </div>
+            </div>
+            <div id="fonador-svg" class="w-full"></div>
+            <div id="fonador-info" class="mt-2 min-h-[48px]"></div>
+            <p class="mt-2 text-[10px] text-pizarra-light leading-snug">Esquema articulatorio a partir de la transcripción: muestra cómo se produce cada sonido, no la boca real de quien habla.</p>
+          </div>
         </div>
         <p class="mt-3 text-[11px] text-pizarra-light">Análisis acústico automático y aproximado (FFT, LPC y YIN en el navegador). En español de Colombia hay seseo: la <em>z</em> y la <em>c</em> suenan [s], así que la fricativa interdental sorda [θ] del centro de España no aparece; la interdental que sí aparece es la aproximante [ð] de <em>cada</em> o <em>todo</em>.</p>
       </div>
@@ -941,7 +969,7 @@
 
     <!-- Barra de Filtros y Buscador en Tiempo Real -->
     <div class="bg-white border border-tarjeta-borde rounded-2xl p-6 mb-10 shadow-sm fade-up">
-      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex flex-col md:flex-row md:flex-wrap items-center justify-between gap-4">
         <div class="relative w-full md:w-96">
           <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-pizarra-light"></i>
           <input type="text" id="lexicon-search" placeholder="Buscar palabra (ej. toche, pingo, arepa)..." class="w-full pl-11 pr-4 py-2.5 rounded-xl border border-tarjeta-borde bg-pergamino text-sm text-pizarra focus:outline-none focus:border-terracota">
@@ -952,6 +980,15 @@
           <button onclick="filterLexicon('lexico')" id="lexcat-lexico" class="lex-filter px-3.5 py-2 rounded-lg text-xs font-semibold bg-pergamino-dark text-pizarra hover:bg-tarjeta-borde">Léxico</button>
           <button onclick="filterLexicon('gastronomia')" id="lexcat-gastronomia" class="lex-filter px-3.5 py-2 rounded-lg text-xs font-semibold bg-pergamino-dark text-pizarra hover:bg-tarjeta-borde">Gastronomía</button>
           <button onclick="filterLexicon('expresion')" id="lexcat-expresion" class="lex-filter px-3.5 py-2 rounded-lg text-xs font-semibold bg-pergamino-dark text-pizarra hover:bg-tarjeta-borde">Expresiones</button>
+        </div>
+        <div class="flex flex-wrap items-center gap-1.5 w-full pt-3 border-t border-tarjeta-borde">
+          <span class="text-[11px] font-mono text-pizarra-light mr-1">Clase de palabra:</span>
+          <button onclick="filterPos('all')" data-pos="all" class="pos-filter px-3 py-1.5 rounded-lg text-xs font-semibold border bg-pizarra text-white border-pizarra">Todas</button>
+          <button onclick="filterPos('sus')" data-pos="sus" class="pos-filter px-3 py-1.5 rounded-lg text-xs font-semibold border bg-white text-pizarra border-tarjeta-borde hover:bg-pergamino-dark">Sustantivos</button>
+          <button onclick="filterPos('adj')" data-pos="adj" class="pos-filter px-3 py-1.5 rounded-lg text-xs font-semibold border bg-white text-pizarra border-tarjeta-borde hover:bg-pergamino-dark">Adjetivos</button>
+          <button onclick="filterPos('loc')" data-pos="loc" class="pos-filter px-3 py-1.5 rounded-lg text-xs font-semibold border bg-white text-pizarra border-tarjeta-borde hover:bg-pergamino-dark">Locuciones verbales</button>
+          <button onclick="filterPos('int')" data-pos="int" class="pos-filter px-3 py-1.5 rounded-lg text-xs font-semibold border bg-white text-pizarra border-tarjeta-borde hover:bg-pergamino-dark">Interjecciones</button>
+          <span class="text-[11px] font-mono text-pizarra-light ml-1">m. = masculino · f. = femenino</span>
         </div>
       </div>
     </div>
@@ -1330,21 +1367,21 @@
     ];
 
     const lexiconEntries = [
-      { term: "Pingo", zone: "Santander Interior", category: "lexico", meaning: "Amigo cercano o persona ingenua/tonta, según la curva entonativa del hablante." },
-      { term: "Arrecho", zone: "Santander Interior", category: "lexico", meaning: "Adjetivo polisémico: enojado, valiente, intrépido o muy difícil/exigente." },
-      { term: "Embolatado", zone: "Santander Interior", category: "lexico", meaning: "Muy ocupado, distraído o confundido con múltiples tareas." },
-      { term: "Mute y Pepitoria", zone: "Santander Interior", category: "gastronomia", meaning: "Sopa tradicional de maíz y carnes (mute) y guiso de vísceras y sangre de cabro con arroz (pepitoria)." },
-      { term: "Hormiga Culona", zone: "Santander Interior", category: "gastronomia", meaning: "Alimento ancestral guane (Atta laevigata) tostado y salado, símbolo gastronómico de Santander." },
-      { term: "«¡Juepucha, mano!»", zone: "Santander Interior", category: "expresion", meaning: "Exclamación enfática de asombro, contrariedad o admiración con fuerte articulación de /x/." },
-      { term: "Bocadillo Veleño", zone: "Sur Andino (Vélez)", category: "gastronomia", meaning: "Dulce tradicional de guayaba envuelto en hoja de bijao con denominación de origen." },
-      { term: "Chirriado", zone: "Sur Andino (Vélez / Málaga)", category: "lexico", meaning: "Agradable, simpático, bonito o bien presentado." },
-      { term: "Toche", zone: "Cúcuta y Pamplona", category: "lexico", meaning: "Término comodín emblemático de Norte de Santander: amigo, tonto o cualquier objeto." },
-      { term: "Corotos", zone: "Cúcuta y Frontera", category: "lexico", meaning: "Objetos personales, enseres domésticos o pertenencias varias." },
-      { term: "Pastel de Garbanzo", zone: "Cúcuta y Pamplona", category: "gastronomia", meaning: "Empanada frita de masa de harina de trigo rellena de puré de garbanzo sazonado." },
-      { term: "«Deje de mamar gallo»", zone: "Cúcuta y Frontera", category: "expresion", meaning: "Locución coloquial para pedir que alguien deje de bromear o hacer perder el tiempo." },
-      { term: "Chuspa y Guineo", zone: "Provincia de Ocaña", category: "lexico", meaning: "Síntesis léxica andino-caribeña: 'chuspa' (bolsa plástica, andino) junto a 'guineo' (banano, costeño)." },
-      { term: "Arepa Ocañera y Barbatuscas", zone: "Provincia de Ocaña", category: "gastronomia", meaning: "Arepa asada sin sal que se abre para rellenar y flores del árbol barbatusco guisadas." },
-      { term: "«¡Ajá, om'be! / Estar en la juega»", zone: "Provincia de Ocaña", category: "expresion", meaning: "Saludo de reconocimiento inmediato y locución que significa 'estar atento o alerta'." }
+      { term: "Pingo", zone: "Santander Interior", category: "lexico", meaning: "Amigo cercano o persona ingenua/tonta, según la curva entonativa del hablante." , pos: [{w:'pingo',c:'adj',d:'adjetivo («no sea pingo»); también sustantivo'}]},
+      { term: "Arrecho", zone: "Santander Interior", category: "lexico", meaning: "Adjetivo polisémico: enojado, valiente, intrépido o muy difícil/exigente." , pos: [{w:'arrecho',c:'adj',d:'adjetivo; varía en género y número (arrecha, arrechos)'}]},
+      { term: "Embolatado", zone: "Santander Interior", category: "lexico", meaning: "Muy ocupado, distraído o confundido con múltiples tareas." , pos: [{w:'embolatado',c:'adj',d:'adjetivo, participio del verbo «embolatar»'}]},
+      { term: "Mute y Pepitoria", zone: "Santander Interior", category: "gastronomia", meaning: "Sopa tradicional de maíz y carnes (mute) y guiso de vísceras y sangre de cabro con arroz (pepitoria)." , pos: [{w:'mute',c:'sus',g:'m',d:'sustantivo masculino'},{w:'pepitoria',c:'sus',g:'f',d:'sustantivo femenino'}]},
+      { term: "Hormiga Culona", zone: "Santander Interior", category: "gastronomia", meaning: "Alimento ancestral guane (Atta laevigata) tostado y salado, símbolo gastronómico de Santander." , pos: [{w:'hormiga culona',c:'sus',g:'f',d:'sintagma nominal: sustantivo femenino + adjetivo'}]},
+      { term: "«¡Juepucha, mano!»", zone: "Santander Interior", category: "expresion", meaning: "Exclamación enfática de asombro, contrariedad o admiración con fuerte articulación de /x/." , pos: [{w:'¡juepucha!',c:'int',d:'interjección (eufemismo de una grosería)'},{w:'mano',c:'sus',g:'m',d:'sustantivo masculino usado como vocativo; apócope de «hermano»'}]},
+      { term: "Bocadillo Veleño", zone: "Sur Andino (Vélez)", category: "gastronomia", meaning: "Dulce tradicional de guayaba envuelto en hoja de bijao con denominación de origen." , pos: [{w:'bocadillo veleño',c:'sus',g:'m',d:'sintagma nominal: sustantivo masculino + adjetivo gentilicio'}]},
+      { term: "Chirriado", zone: "Sur Andino (Vélez / Málaga)", category: "lexico", meaning: "Agradable, simpático, bonito o bien presentado." , pos: [{w:'chirriado',c:'adj',d:'adjetivo'}]},
+      { term: "Toche", zone: "Cúcuta y Pamplona", category: "lexico", meaning: "Término comodín emblemático de Norte de Santander: amigo, tonto o cualquier objeto." , pos: [{w:'toche',c:'sus',g:'m',d:'sustantivo (vocativo: «¡ole, toche!»); también adjetivo: «tan toche»'}]},
+      { term: "Corotos", zone: "Cúcuta y Frontera", category: "lexico", meaning: "Objetos personales, enseres domésticos o pertenencias varias." , pos: [{w:'corotos',c:'sus',g:'m',d:'sustantivo masculino, casi siempre en plural'}]},
+      { term: "Pastel de Garbanzo", zone: "Cúcuta y Pamplona", category: "gastronomia", meaning: "Empanada frita de masa de harina de trigo rellena de puré de garbanzo sazonado." , pos: [{w:'pastel de garbanzo',c:'sus',g:'m',d:'sintagma nominal: sustantivo masculino + complemento'}]},
+      { term: "«Deje de mamar gallo»", zone: "Cúcuta y Frontera", category: "expresion", meaning: "Locución coloquial para pedir que alguien deje de bromear o hacer perder el tiempo." , pos: [{w:'mamar gallo',c:'loc',d:'locución verbal; aquí dentro de la perífrasis «dejar de» + infinitivo'}]},
+      { term: "Chuspa y Guineo", zone: "Provincia de Ocaña", category: "lexico", meaning: "Síntesis léxica andino-caribeña: 'chuspa' (bolsa plástica, andino) junto a 'guineo' (banano, costeño)." , pos: [{w:'chuspa',c:'sus',g:'f',d:'sustantivo femenino'},{w:'guineo',c:'sus',g:'m',d:'sustantivo masculino'}]},
+      { term: "Arepa Ocañera y Barbatuscas", zone: "Provincia de Ocaña", category: "gastronomia", meaning: "Arepa asada sin sal que se abre para rellenar y flores del árbol barbatusco guisadas." , pos: [{w:'arepa ocañera',c:'sus',g:'f',d:'sintagma nominal: sustantivo femenino + adjetivo gentilicio'},{w:'barbatuscas',c:'sus',g:'f',d:'sustantivo femenino plural'}]},
+      { term: "«¡Ajá, om'be! / Estar en la juega»", zone: "Provincia de Ocaña", category: "expresion", meaning: "Saludo de reconocimiento inmediato y locución que significa 'estar atento o alerta'." , pos: [{w:'¡ajá!',c:'int',d:'interjección'},{w:'¡om\'be!',c:'int',d:'interjección, apócope de «hombre»'},{w:'estar en la juega',c:'loc',d:'locución verbal'}]}
     ];
 
     const dialoguesData = [
@@ -1778,6 +1815,23 @@
       renderLexicon();
     }
 
+    // Categoría gramatical (clase de palabra)
+    const POS_LABELS = {
+      sus: { label: 'Sustantivo', cls: 'bg-sky-50 text-sky-800 border-sky-200' },
+      adj: { label: 'Adjetivo', cls: 'bg-emerald-50 text-emerald-800 border-emerald-200' },
+      loc: { label: 'Locución verbal', cls: 'bg-rose-50 text-rose-800 border-rose-200' },
+      int: { label: 'Interjección', cls: 'bg-amber-50 text-amber-800 border-amber-200' }
+    };
+    let activePos = 'all';
+    function filterPos(c) {
+      activePos = c;
+      document.querySelectorAll('.pos-filter').forEach(b => {
+        const on = b.dataset.pos === c;
+        b.className = 'pos-filter px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors ' + (on ? 'bg-pizarra text-white border-pizarra' : 'bg-white text-pizarra border-tarjeta-borde hover:bg-pergamino-dark');
+      });
+      renderLexicon();
+    }
+
     function renderLexicon() {
       const grid = document.getElementById("lexicon-grid");
       const searchInput = document.getElementById("lexicon-search");
@@ -1787,11 +1841,12 @@
 
       const filtered = lexiconEntries.filter(item => {
         const matchesCat = (activeLexiconCategory === 'all' || item.category === activeLexiconCategory);
+        const matchesPos = (activePos === 'all' || (item.pos || []).some(p => p.c === activePos));
         const matchesQuery = !query ||
           item.term.toLowerCase().includes(query) ||
           item.zone.toLowerCase().includes(query) ||
           item.meaning.toLowerCase().includes(query);
-        return matchesCat && matchesQuery;
+        return matchesCat && matchesPos && matchesQuery;
       });
 
       if (filtered.length === 0) {
@@ -1815,6 +1870,7 @@
                 <span class="font-mono text-[11px] text-pizarra-light">${item.zone}</span>
               </div>
               <h3 class="font-serif font-bold text-xl text-pizarra mb-2">${item.term}</h3>
+              ${(item.pos || []).length ? `<div class="flex flex-wrap gap-1.5 mb-3">${item.pos.map(p => { const P = POS_LABELS[p.c]; return `<span title="${p.w}: ${p.d}" class="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-md border ${P.cls}">${item.pos.length > 1 ? `<span class="font-normal opacity-80">${p.w}</span> · ` : ''}${P.label}${p.g ? ` <span class="font-mono">${p.g}.</span>` : ''}</span>`; }).join('')}</div>` : ''}
               <p class="text-sm text-pizarra-light leading-relaxed">${item.meaning}</p>
             </div>
           </div>
@@ -2010,11 +2066,12 @@
   <!-- Atlas (globo) y líneas de entonación -->
   <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
-  <script src="data/geo-santander.js?v=202611222117"></script>
-  <script src="js/atlas.js?v=202611222117"></script>
-  <script src="data/muestras.js?v=202611222117"></script>
-  <script src="js/fonetica.js?v=202611222117"></script>
-  <script src="js/entonacion.js?v=202611222117"></script>
-  <script src="js/videos.js?v=202611222117"></script>
+  <script src="data/geo-santander.js?v=202611222207"></script>
+  <script src="js/atlas.js?v=202611222207"></script>
+  <script src="data/muestras.js?v=202611222207"></script>
+  <script src="js/fonetica.js?v=202611222207"></script>
+  <script src="js/fonador.js?v=202611222207"></script>
+  <script src="js/entonacion.js?v=202611222207"></script>
+  <script src="js/videos.js?v=202611222207"></script>
 </body>
 </html>

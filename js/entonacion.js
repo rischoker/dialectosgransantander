@@ -234,13 +234,14 @@
     });
   }
 
-  function play(t) {
+  function play(t, rate) {
     stop();
+    rate = rate || 1;
     const ac = audioCtx();
     const src = ac.createBufferSource();
-    src.buffer = t.buffer; src.connect(ac.destination);
+    src.buffer = t.buffer; src.playbackRate.value = rate; src.connect(ac.destination);
     src.start();
-    playing = { track: t, src, t0: ac.currentTime };
+    playing = { track: t, src, t0: ac.currentTime, rate };
     src.onended = () => { if (playing && playing.src === src) stop(); };
     t.playBtn.innerHTML = '<i class="fa-solid fa-stop text-xs"></i>';
     requestAnimationFrame(tick);
@@ -254,7 +255,7 @@
   }
   function tick() {
     if (!playing) return; draw();
-    if (window.Fonetica && Fonetica.current() === playing.track) Fonetica.drawCursor(audioCtx().currentTime - playing.t0);
+    if (window.Fonetica && Fonetica.current() === playing.track) Fonetica.drawCursor((audioCtx().currentTime - playing.t0) * playing.rate);
     requestAnimationFrame(tick);
   }
 
@@ -321,7 +322,7 @@
 
     if (playing) {
       const t = playing.track;
-      const el = audioCtx().currentTime - playing.t0;
+      const el = (audioCtx().currentTime - playing.t0) * playing.rate;
       const i = Math.min(t.b, Math.max(t.a, Math.round(el / t.hop)));
       const px = x(t, i);
       ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.lineWidth = 1.5;
@@ -435,5 +436,5 @@
   resize(); renderList();
 
   // Para pruebas y depuración
-  window.entonacion = { analyze, tracks, addFromArrayBuffer, loadSample: (id) => window.cargarMuestra(id) };
+  window.entonacion = { analyze, tracks, addFromArrayBuffer, playCurrent: (rate) => { const t = window.Fonetica && Fonetica.current(); if (t) play(t, rate); }, loadSample: (id) => window.cargarMuestra(id) };
 })();
