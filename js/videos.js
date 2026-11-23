@@ -29,7 +29,7 @@
   }
 
   function load(id) {
-    current = id; tabs(id);
+    current = id; tabs(id); stopAt = null;
     if (video) { video.pause(); video = null; }
     const d = V[id];
     if (!d) {
@@ -47,7 +47,7 @@
       return;
     }
     frame.innerHTML = `
-      <video playsinline controls preload="metadata" poster="${d.poster}" class="block w-full max-h-[420px] bg-black object-contain">
+      <video playsinline controls preload="metadata" poster="videos/subzona-${id}-frag.jpg" class="block w-full max-h-[420px] bg-black object-contain">
         <source src="${d.src}" type="video/mp4">
       </video>
       <div class="vid-sub pointer-events-none absolute left-3 right-3 bottom-14 text-center"><span class="hidden"></span></div>`;
@@ -88,5 +88,45 @@
     src.innerHTML = `<i class="fa-solid fa-circle-info mr-1"></i>Fuente: ${esc(d.fuente)} Transcripción automática.`;
   }
 
+  // Reproduce solo el fragmento de la frase de muestra de la subzona y se detiene al final
+  let stopAt = null;
+  function playFragment(id) {
+    const m = ((window.MUESTRAS && window.MUESTRAS.muestras) || []).find(x => x.zona === id);
+    if (!m || !V[id]) { load(id); return; }
+    if (current !== id || !video) load(id);
+    const box = frame.closest('.lg\\:col-span-5') || frame;
+    box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    const start = () => {
+      stopAt = m.video.fin + 0.15;
+      video.currentTime = Math.max(0, m.video.ini - 0.1);
+      video.play().catch(() => {});
+      showBadge(`Fragmento ${m.id} · ${m.lugar}`);
+    };
+    if (video.readyState >= 1) start(); else video.addEventListener('loadedmetadata', start, { once: true });
+  }
+  function showBadge(text) {
+    let b = frame.querySelector('.vid-frag');
+    if (!b) {
+      b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'vid-frag absolute top-2 left-2 bg-terracota text-white font-mono text-[11px] font-bold px-2.5 py-1 rounded-lg shadow-lg';
+      b.addEventListener('click', () => { stopAt = null; b.remove(); video.play(); });
+      frame.appendChild(b);
+    }
+    b.innerHTML = `<i class="fa-solid fa-scissors mr-1"></i>${text}`;
+    b.title = 'Seguir viendo el video completo';
+  }
+  frame.addEventListener('timeupdate', () => {
+    if (stopAt != null && video && video.currentTime >= stopAt) {
+      video.pause(); stopAt = null;
+      const b = frame.querySelector('.vid-frag');
+      if (b) b.innerHTML = '<i class="fa-solid fa-play mr-1"></i>Seguir viendo el video completo';
+    }
+  }, true);
+  frame.addEventListener('seeking', () => {
+    if (stopAt != null && video && (video.currentTime < stopAt - 30 || video.currentTime > stopAt + 1)) stopAt = null;
+  }, true);
+
   window.loadVideoSubzone = load;
+  window.playVideoFragment = playFragment;
 })();
