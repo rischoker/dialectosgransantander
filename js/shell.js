@@ -17,7 +17,7 @@
     const card = (x, dir) => !x ? '<span></span>' : `
       <a href="#/${x.dataset.unit}" data-goto="${x.dataset.unit}" class="group block rounded-2xl border border-tarjeta-borde bg-white hover:border-terracota hover:shadow-md transition-all p-4 ${dir === 'next' ? 'text-right' : ''}">
         <span class="block text-[10px] font-mono uppercase tracking-widest text-pizarra-light mb-1">${dir === 'next' ? 'Siguiente' : 'Anterior'} · ${keys.indexOf(x.dataset.unit)} de ${units.length - 1}</span>
-        <span class="font-serif font-bold text-pizarra group-hover:text-terracota"><i class="fa-solid ${x.dataset.icon} mr-2 text-terracota"></i>${x.dataset.title}</span>
+        <span class="font-serif font-bold text-pizarra group-hover:text-terracota inline-flex items-center gap-2"><span class="text-terracota">${window.UNIT_ICON ? window.UNIT_ICON(x.dataset.unit, 'w-5 h-5') : ''}</span>${x.dataset.title}</span>
         <i class="fa-solid ${dir === 'next' ? 'fa-arrow-right ml-2' : 'fa-arrow-left mr-2'} text-pizarra-light group-hover:text-terracota"></i>
       </a>`;
     nav.innerHTML = card(prev, 'prev') + card(next, 'next');
@@ -30,6 +30,7 @@
     const u = document.getElementById('u-' + key);
     if (!u) return;
     if (current !== u) {
+      if (current && !opts.noTurn) turnPage(current, keys.indexOf(key) >= keys.indexOf(current.dataset.unit) ? 'fwd' : 'back', u);
       units.forEach(x => x.classList.toggle('is-active', x === u));
       current = u;
       document.querySelectorAll('.unit-link').forEach(a => a.classList.toggle('is-active', a.dataset.goto === key));
@@ -45,6 +46,35 @@
     closeSidebar();
   }
   const unitOf = (el) => el && el.closest && el.closest('.unit');
+
+  /* ---------- Pase de página: la hoja actual gira como en un libro ---------- */
+  let turning = null;
+  function endTurn() {
+    if (!turning) return;
+    const { el, shade, timer, next } = turning;
+    clearTimeout(timer);
+    el.classList.remove('page-turn', 'fwd', 'back', 'turning');
+    ['top', 'left', 'width', 'height', 'clipPath', 'transformOrigin'].forEach(p => { el.style[p] = ''; });
+    if (shade) shade.remove();
+    if (next) next.classList.remove('under-turn');
+    turning = null;
+  }
+  function turnPage(old, dir, next) {
+    endTurn();
+    if (window.innerWidth < 1024) return;            // en celular, transición suave normal
+    const r = old.getBoundingClientRect();
+    if (r.height <= 0) return;
+    const visTop = Math.max(0, -r.top), visBottom = Math.min(r.height, window.innerHeight - r.top);
+    old.classList.add('turning', 'page-turn', dir);
+    Object.assign(old.style, {
+      top: r.top + 'px', left: r.left + 'px', width: r.width + 'px', height: r.height + 'px',
+      clipPath: `inset(${visTop}px 0 ${Math.max(0, r.height - visBottom)}px 0 round 18px)`,
+      transformOrigin: `${dir === 'fwd' ? 'left' : 'right'} ${(visTop + visBottom) / 2}px`
+    });
+    const shade = document.createElement('div'); shade.className = 'page-shade'; old.appendChild(shade);
+    if (next) next.classList.add('under-turn');
+    turning = { el: old, shade, next, timer: setTimeout(endTurn, 820) };
+  }
 
   // Cualquier código que haga scrollIntoView sobre algo de otra unidad abre esa unidad primero
   const nativeScroll = Element.prototype.scrollIntoView;
@@ -157,9 +187,9 @@
   window.irAUnidad = show;
   const start = () => {
     const h = location.hash;
-    if (h.startsWith('#/') && keys.includes(h.slice(2))) show(h.slice(2), { noHash: true });
-    else if (h && document.getElementById(h.slice(1))) { show('portada', { noHash: true }); go(h); }
-    else show('portada', { noHash: true });
+    if (h.startsWith('#/') && keys.includes(h.slice(2))) show(h.slice(2), { noHash: true, noTurn: true });
+    else if (h && document.getElementById(h.slice(1))) { show('portada', { noHash: true, noTurn: true }); go(h); }
+    else show('portada', { noHash: true, noTurn: true });
     if (typeof selectSubzone === 'function') addZoneLinks(1);
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => setTimeout(start, 0));

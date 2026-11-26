@@ -113,7 +113,7 @@
       <circle r="27" fill="#FFF7EE" stroke="#D8A992"/>
       <path id="fz-fold-l" stroke="#C2414F" stroke-width="5" stroke-linecap="round" fill="none"/>
       <path id="fz-fold-r" stroke="#C2414F" stroke-width="5" stroke-linecap="round" fill="none"/>
-      <text y="40" text-anchor="middle" font-size="9" font-family="JetBrains Mono, monospace" fill="#546062">cuerdas vocales</text>
+      <text y="40" text-anchor="middle" font-size="9" font-family="JetBrains Mono, monospace" fill="#6E5B4B">cuerdas vocales</text>
     </g>
     <path d="M300,320 L322,296" stroke="#D8A992" stroke-dasharray="3 3"/>
     <!-- nombres -->

@@ -402,7 +402,7 @@
         const v = Math.max(0, Math.min(1, (r[k] - lo) / 70));
         // paleta: verde oscuro -> ocre -> crema
         const t = Math.pow(v, 1.6);
-        const R = 18 + t * (250 - 18), G = 38 + t * (215 - 38) * (0.6 + 0.4 * t), B = 34 + t * (120 - 34) * (1 - t * 0.5);
+        const R = 43 + t * (250 - 43), G = 30 + t * (215 - 30) * (0.6 + 0.4 * t), B = 22 + t * (130 - 22) * (1 - t * 0.5);
         const idx = ((rows - 1 - k) * cols + x) * 4;
         img.data[idx] = R; img.data[idx + 1] = G; img.data[idx + 2] = B; img.data[idx + 3] = 255;
       }
@@ -485,11 +485,11 @@
     g.strokeStyle = 'rgba(28,37,38,.25)'; g.lineWidth = 1.5; g.beginPath();
     g.moveTo(X(2500 * sc), Y(250 * sc)); g.lineTo(X(700 * sc), Y(250 * sc)); g.lineTo(X(1000 * sc), Y(850 * sc)); g.lineTo(X(1700 * sc), Y(850 * sc)); g.closePath(); g.stroke();
     g.font = '700 14px Fraunces, serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
-    VOWELS.forEach(v => { g.fillStyle = 'rgba(28,37,38,.18)'; g.beginPath(); g.arc(X(v.f2 * sc), Y(v.f1 * sc), 16, 0, 7); g.fill(); g.fillStyle = '#1C2526'; g.fillText(v.v, X(v.f2 * sc), Y(v.f1 * sc)); });
+    VOWELS.forEach(v => { g.fillStyle = 'rgba(28,37,38,.18)'; g.beginPath(); g.arc(X(v.f2 * sc), Y(v.f1 * sc), 16, 0, 7); g.fill(); g.fillStyle = '#2E2119'; g.fillText(v.v, X(v.f2 * sc), Y(v.f1 * sc)); });
     current.fon.segs.forEach(s => {
       if (!s.f1) return;
       const x = Math.max(P, Math.min(w - P, X(s.f2))), y = Math.max(P, Math.min(h - P, Y(s.f1)));
-      g.fillStyle = s === selSeg ? '#B84A27' : 'rgba(217,119,6,.75)'; g.beginPath(); g.arc(x, y, s === selSeg ? 6 : 4, 0, 7); g.fill();
+      g.fillStyle = s === selSeg ? '#B5532A' : 'rgba(217,119,6,.75)'; g.beginPath(); g.arc(x, y, s === selSeg ? 6 : 4, 0, 7); g.fill();
       if (s === selSeg) { g.strokeStyle = '#fff'; g.lineWidth = 2; g.stroke(); }
     });
     g.font = '10px "JetBrains Mono", monospace'; g.fillStyle = 'rgba(84,96,98,.9)';
@@ -549,7 +549,7 @@
     const words = g2p(text, { aspirate: dial.value === 'caribe', dElision: dEl.checked });
     ipaEl.innerHTML = words.map((w, wi) => `
       <span class="inline-flex flex-col items-center mr-2 mb-2">
-        <span class="inline-flex">${w.ph.map((x, pi) => `<button type="button" data-wi="${wi}" data-pi="${pi}" class="fon-ph font-mono text-base font-bold px-1 rounded hover:bg-pergamino-dark" style="color:${MANNER_COLOR(x.p)};text-shadow:0 0 0 #1C2526" data-p="${x.p}">${x.p}</button>`).join('')}</span>
+        <span class="inline-flex">${w.ph.map((x, pi) => `<button type="button" data-wi="${wi}" data-pi="${pi}" class="fon-ph font-mono text-base font-bold px-1 rounded hover:bg-pergamino-dark" style="color:${MANNER_COLOR(x.p)};text-shadow:0 0 0 #2E2119" data-p="${x.p}">${x.p}</button>`).join('')}</span>
         <span class="text-[10px] text-pizarra-light">${w.word}</span>
       </span>`).join('');
     ipaEl.querySelectorAll('.fon-ph').forEach(b => b.addEventListener('click', () => {
@@ -579,7 +579,7 @@
     list.forEach(t => {
       const b = document.createElement('button'); b.type = 'button';
       b.className = 'px-3 py-1 rounded-full text-xs font-mono font-bold border transition-all ' + (t === current ? 'text-white border-transparent' : 'bg-white text-pizarra border-tarjeta-borde');
-      if (t === current) b.style.background = '#1F4E46';
+      if (t === current) b.style.background = '#4E6B3A';
       b.innerHTML = `<span class="inline-block w-2 h-2 rounded-full mr-1.5" style="background:${t.color}"></span>${t.name.replace(/</g, '&lt;')}`;
       b.addEventListener('click', () => select(t, list));
       chipsEl.appendChild(b);
