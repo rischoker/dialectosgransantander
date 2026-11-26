@@ -11,23 +11,24 @@
   <!-- Google Fonts: Fraunces, Plus Jakarta Sans, JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            pergamino: '#FAF7F2',
-            'pergamino-dark': '#F0EBE1',
-            terracota: '#B84A27',
-            'terracota-dark': '#8C341A',
-            'verde-rio': '#1F4E46',
-            'verde-oscuro': '#122622',
-            'ocre-dorado': '#D97706',
-            pizarra: '#1C2526',
-            'pizarra-light': '#546062',
-            'tarjeta-borde': '#E2DAD0'
+            pergamino: '#F6EDDF',
+            'pergamino-dark': '#ECDDC4',
+            terracota: '#B5532A',
+            'terracota-dark': '#7A3B22',
+            'verde-rio': '#4E6B3A',
+            'verde-oscuro': '#2B1E16',
+            'ocre-dorado': '#D4923A',
+            pizarra: '#2E2119',
+            'pizarra-light': '#6E5B4B',
+            'tarjeta-borde': '#E2CFB0',
+            'azul-canon': '#2F5C73'
           },
           fontFamily: {
             serif: ['Fraunces', 'serif'],
@@ -42,9 +43,9 @@
   <style>
     /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #FAF7F2; }
-    ::-webkit-scrollbar-thumb { background: #B84A27; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #8C341A; }
+    ::-webkit-scrollbar-track { background: #F6EDDF; }
+    ::-webkit-scrollbar-thumb { background: #B5532A; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #7A3B22; }
 
     /* Glassmorphism */
     .glass-nav {
@@ -132,10 +133,10 @@
     }
     /* Atlas (globo) */
     .atlas-step:hover { background: rgba(255,255,255,0.55); }
-    .atlas-step.active { background: #FFFFFF; border-color: #E2DAD0; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .atlas-step.active { background: #FFFFFF; border-color: #E2CFB0; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
     .atlas-step-num { flex: none; width: 1.75rem; height: 1.75rem; border-radius: 9999px; display: flex; align-items: center; justify-content: center;
-      font: 700 12px "JetBrains Mono", monospace; background: #E2DAD0; color: #1C2526; transition: all .25s; }
-    .atlas-step.active .atlas-step-num { background: #B84A27; color: #fff; }
+      font: 700 12px "JetBrains Mono", monospace; background: #E2CFB0; color: #2E2119; transition: all .25s; }
+    .atlas-step.active .atlas-step-num { background: #B5532A; color: #fff; }
     .atlas-pin { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 6px; opacity: 0; background: none; border: 0; padding: 0;
       transition: opacity .3s; cursor: pointer; will-change: transform; }
     .atlas-pin .dot { width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 9999px; background: var(--c); color: #fff; border: 2.5px solid #fff;
@@ -144,15 +145,15 @@
     .atlas-pin .dot::after { content: ""; position: absolute; inset: -7px; border-radius: 9999px; border: 2px solid var(--c); animation: atlasPulse 2.4s infinite; }
     .atlas-pin.minor .dot { width: 14px; height: 14px; margin: -7px 0 0 -7px; border-width: 2px; }
     .atlas-pin.minor .dot::after { display: none; }
-    .atlas-pin .lbl { margin-top: -13px; font: 700 12px "Plus Jakarta Sans", sans-serif; color: #1C2526; background: rgba(250,247,242,.94);
-      border: 1px solid #E2DAD0; border-radius: 6px; padding: 2px 7px; white-space: nowrap; }
-    .atlas-pin.minor .lbl { margin-top: -7px; font-size: 10.5px; font-weight: 600; color: #546062; }
+    .atlas-pin .lbl { margin-top: -13px; font: 700 12px "Plus Jakarta Sans", sans-serif; color: #2E2119; background: rgba(250,247,242,.94);
+      border: 1px solid #E2CFB0; border-radius: 6px; padding: 2px 7px; white-space: nowrap; }
+    .atlas-pin.minor .lbl { margin-top: -7px; font-size: 10.5px; font-weight: 600; color: #6E5B4B; }
     .atlas-pin.left { flex-direction: row-reverse; transform-origin: 0 0; }
     .atlas-pin.left .dot { margin: -13px -13px 0 0; }
     .atlas-pin.left { translate: -100% 0; }
     .atlas-pin:hover .dot, .atlas-pin:focus-visible .dot { transform: scale(1.18); }
     .atlas-pin:focus-visible { outline: none; }
-    .atlas-pin:focus-visible .lbl { outline: 2px solid #B84A27; }
+    .atlas-pin:focus-visible .lbl { outline: 2px solid #B5532A; }
     @keyframes atlasPulse { 0% { transform: scale(.7); opacity: .9; } 100% { transform: scale(1.5); opacity: 0; } }
     @media (prefers-reduced-motion: reduce) { .atlas-pin .dot::after { animation: none; opacity: .4; } }
     /* Aparato fonador */
@@ -170,19 +171,71 @@
     @keyframes fzTrill { to { transform: translateY(2px); } }
     /* Unidades tipo Encarta */
     .unit { display: none; }
-    .unit.is-active { display: block; animation: unitIn .55s cubic-bezier(.16,1,.3,1); }
+    .unit.is-active { display: block; animation: unitIn .45s cubic-bezier(.16,1,.3,1); }
     @keyframes unitIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
     .unit-link.is-active { background: rgba(184,74,39,.18); color: #fff; }
-    .unit-link.is-active .unit-num { background: #B84A27; color: #fff; }
+    .unit-link.is-active .unit-num { background: #B5532A; color: #fff; }
     body.sidebar-open #sidebar { transform: none; }
+    /* ===== Diseño "Tierra santandereana" ===== */
+    :root { --mesa: #D8C3A0; --hoja: #F6EDDF; --arcilla: #B5532A; --arcilla-osc: #7A3B22; --tabaco: #2B1E16; }
+    body { background-color: var(--mesa);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .22 0 0 0 0 .12 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+    /* La página como una hoja encuadrada sobre la mesa */
+    @media (min-width: 1024px) {
+      #units { padding: 18px 18px 18px calc(272px + 18px) !important; }
+    }
+    .unit { position: relative; background-color: var(--hoja); border-radius: 18px; overflow: clip;
+      box-shadow: 0 0 0 1px rgba(122,59,34,.18), 0 2px 0 rgba(255,255,255,.5) inset, 0 30px 60px -30px rgba(43,30,22,.55), 0 8px 18px -10px rgba(43,30,22,.35);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .48 0 0 0 0 .32 0 0 0 0 .18 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E"); }
+    .unit::after { content: ""; position: absolute; inset: 8px; border: 1px solid rgba(122,59,34,.16); border-radius: 12px; pointer-events: none; z-index: 2; }
+    @media (max-width: 1023px) { .unit { border-radius: 0; } .unit::after { display: none; } }
+    .wm ~ :not(.absolute):not(.fixed) { position: relative; z-index: 1; }
+    .unit > section { position: relative; z-index: 1; }
+
+    /* Marcos de las tarjetas: filete doble como en las láminas de un atlas */
+    .unit .bg-white.border { box-shadow: inset 0 0 0 4px #FFFCF6, inset 0 0 0 5px rgba(181,83,42,.16), 0 12px 26px -20px rgba(43,30,22,.45); }
+    .unit .bg-pergamino.border { box-shadow: inset 0 0 0 3px #F6EDDF, inset 0 0 0 4px rgba(181,83,42,.14); }
+    .unit [class*="bg-white/5"].border { box-shadow: inset 0 0 0 4px #33251C, inset 0 0 0 5px rgba(212,146,58,.18), 0 18px 30px -22px rgba(0,0,0,.6); }
+
+    /* Tipografía con carácter */
+    .font-serif { font-variation-settings: "SOFT" 70, "WONK" 1; letter-spacing: -.01em; }
+    h1.font-serif, h2.font-serif { font-weight: 650; font-optical-sizing: auto; }
+    #hero h1 span { font-style: italic; font-weight: 500; }
+    .text-center > h2.font-serif::after { content: ""; display: block; width: 150px; height: 14px; margin: 14px auto 0; opacity: .85;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 14'%3E%3Cg fill='none' stroke='%23B5532A' stroke-width='1.2'%3E%3Cpath d='M2 7h52M96 7h52'/%3E%3Cpath d='M75 1l6 6-6 6-6-6z'/%3E%3Ccircle cx='60' cy='7' r='2'/%3E%3Ccircle cx='90' cy='7' r='2'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat; }
+    .unit section.bg-verde-oscuro .text-center > h2.font-serif::after { filter: brightness(1.6); }
+
+    /* Panel lateral: las unidades sobresalen al pasar el ratón */
+    #sidebar { background-color: #24180F; background-image: linear-gradient(180deg, rgba(212,146,58,.06), transparent 40%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 .9 0 0 0 0 .7 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+    .unit-link { position: relative; transition: transform .25s cubic-bezier(.2,.9,.3,1.3), background-color .2s, box-shadow .25s, color .2s; }
+    .unit-link::before { content: ""; position: absolute; left: -12px; top: 18%; bottom: 18%; width: 4px; border-radius: 4px; background: #D4923A; transform: scaleY(0); transition: transform .25s; }
+    .unit-link:hover { transform: translateX(8px) scale(1.035); background: rgba(243,227,198,.09); color: #fff; box-shadow: 0 10px 24px -14px rgba(0,0,0,.8), inset 0 0 0 1px rgba(212,146,58,.25); }
+    .unit-link:hover::before, .unit-link.is-active::before { transform: scaleY(1); }
+    .unit-link .unit-num { transition: transform .3s cubic-bezier(.2,.9,.3,1.4), background-color .2s, color .2s; color: #E7C99A; }
+    .unit-link:hover .unit-num { transform: rotate(-8deg) scale(1.15); background: #D4923A; color: #24180F; }
+    .unit-link.is-active { background: rgba(181,83,42,.22); }
+
+    /* Pase de página */
+    .page-turn { position: fixed !important; z-index: 60; pointer-events: none; transform-origin: left center; backface-visibility: hidden; will-change: transform; }
+    .page-turn.fwd { animation: pageFwd .8s cubic-bezier(.55,.05,.35,1) forwards; }
+    .page-turn.back { animation: pageBack .8s cubic-bezier(.55,.05,.35,1) forwards; transform-origin: right center; }
+    .page-turn .page-shade { position: absolute; inset: 0; pointer-events: none; z-index: 70; }
+    .page-turn.fwd .page-shade { background: linear-gradient(90deg, rgba(43,30,22,0) 40%, rgba(43,30,22,.35)); animation: shade .8s forwards; }
+    .page-turn.back .page-shade { background: linear-gradient(270deg, rgba(43,30,22,0) 40%, rgba(43,30,22,.35)); animation: shade .8s forwards; }
+    @keyframes pageFwd { 0% { transform: perspective(2400px) rotateY(0); } 100% { transform: perspective(2400px) rotateY(-100deg); opacity: .6; } }
+    @keyframes pageBack { 0% { transform: perspective(2400px) rotateY(0); } 100% { transform: perspective(2400px) rotateY(100deg); opacity: .6; } }
+    @keyframes shade { 0% { opacity: 0; } 60% { opacity: 1; } 100% { opacity: 1; } }
+    .unit.under-turn { animation: none !important; }
+    .unit.turning { display: block; }
+    #sidebar nav { overflow-x: hidden; padding-left: 16px; }
   </style>
 </head>
 
-<body class="bg-pergamino text-pizarra font-sans antialiased selection:bg-terracota selection:text-white">
+<body class="text-pizarra font-sans antialiased selection:bg-terracota selection:text-white">
 
 
   <!-- NAVEGACIÓN TIPO ENCARTA: barra lateral con unidades -->
-  <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-[272px] bg-[#0E1E1B] border-r border-white/10 flex flex-col -translate-x-full lg:translate-x-0 transition-transform duration-300">
+  <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-[272px] border-r border-white/10 flex flex-col -translate-x-full lg:translate-x-0 transition-transform duration-300">
     <a href="#/portada" data-goto="portada" class="flex items-center gap-3 px-5 pt-6 pb-5 border-b border-white/10">
       <span class="w-10 h-10 rounded-xl bg-terracota text-white flex items-center justify-center font-serif font-bold text-lg shadow">V</span>
       <span class="flex flex-col"><span class="font-serif font-bold text-white leading-tight">Voces del Oriente</span><span class="text-[11px] text-slate-400">Atlas dialectal de los Santanderes</span></span>
@@ -228,7 +281,7 @@
   </aside>
   <div id="sidebar-scrim" class="fixed inset-0 z-40 bg-black/50 hidden lg:hidden"></div>
   <!-- Barra superior en celular -->
-  <div class="lg:hidden fixed top-0 inset-x-0 z-30 h-14 bg-[#0E1E1B]/95 backdrop-blur border-b border-white/10 flex items-center justify-between px-4">
+  <div class="lg:hidden fixed top-0 inset-x-0 z-30 h-14 bg-[#24180F]/95 backdrop-blur border-b border-white/10 flex items-center justify-between px-4">
     <button type="button" id="sidebar-open" class="w-10 h-10 rounded-xl bg-white/10 text-white flex items-center justify-center" aria-label="Abrir unidades"><i class="fa-solid fa-bars"></i></button>
     <span id="mobile-unit-title" class="font-serif font-bold text-white text-sm truncate px-3"></span>
     <span class="w-10 h-10 rounded-xl bg-terracota text-white flex items-center justify-center font-serif font-bold">V</span>
@@ -244,8 +297,8 @@
       <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
         <defs>
           <pattern id="chicamocha-grid" width="80" height="80" patternUnits="userSpaceOnUse">
-            <path d="M 80 0 L 0 80 M 0 0 L 80 80" fill="none" stroke="#FAF7F2" stroke-width="0.8" opacity="0.4"/>
-            <circle cx="40" cy="40" r="3" fill="#B84A27"/>
+            <path d="M 80 0 L 0 80 M 0 0 L 80 80" fill="none" stroke="#F6EDDF" stroke-width="0.8" opacity="0.4"/>
+            <circle cx="40" cy="40" r="3" fill="#B5532A"/>
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#chicamocha-grid)" />
@@ -372,7 +425,7 @@
       </div>
 
       <div class="lg:col-span-8 fade-up">
-        <div id="atlas-stage" class="relative w-full aspect-square sm:aspect-[4/3] max-h-[640px] rounded-3xl border border-verde-oscuro shadow-2xl overflow-hidden touch-none select-none" style="background: radial-gradient(ellipse at 50% 45%, #183A35 0%, #0B1A17 70%, #07110F 100%)">
+        <div id="atlas-stage" class="relative w-full aspect-square sm:aspect-[4/3] max-h-[640px] rounded-3xl border border-verde-oscuro shadow-2xl overflow-hidden touch-none select-none" style="background: radial-gradient(ellipse at 50% 45%, #2A3D45 0%, #16232A 70%, #0F171B 100%)">
           <canvas id="atlas-canvas" class="absolute inset-0 w-full h-full" aria-label="Globo terráqueo que se acerca a Colombia y a los departamentos de Santander y Norte de Santander"></canvas>
           <div id="atlas-pins" class="absolute inset-0 pointer-events-none"></div>
           <div id="atlas-caption" class="absolute left-4 bottom-4 right-4 sm:right-auto bg-pergamino/90 backdrop-blur border border-tarjeta-borde rounded-xl px-4 py-2.5 text-xs text-pizarra shadow-sm max-w-sm pointer-events-none"></div>
@@ -563,7 +616,7 @@
                 <circle cx="170" cy="100" r="16" fill="none" stroke="#14B8A6" class="map-ring-pulse"/>
                 <circle id="node-circle-5" cx="170" cy="100" r="11" fill="#14B8A6" stroke="#FFFFFF" stroke-width="2" filter="url(#glow-node)"/>
                 <text x="170" y="104" text-anchor="middle" fill="#FFFFFF" font-family="JetBrains Mono" font-size="10" font-weight="bold">5</text>
-                <rect x="135" y="70" width="70" height="17" rx="4" fill="#122622" opacity="0.88"/>
+                <rect x="135" y="70" width="70" height="17" rx="4" fill="#2B1E16" opacity="0.88"/>
                 <text x="170" y="82" text-anchor="middle" fill="#5EEAD4" font-family="Plus Jakarta Sans" font-size="10" font-weight="bold">Ocaña</text>
               </g>
 
@@ -572,7 +625,7 @@
                 <circle cx="305" cy="175" r="16" fill="none" stroke="#F59E0B" class="map-ring-pulse"/>
                 <circle id="node-circle-4" cx="305" cy="175" r="11" fill="#F59E0B" stroke="#FFFFFF" stroke-width="2" filter="url(#glow-node)"/>
                 <text x="305" y="179" text-anchor="middle" fill="#FFFFFF" font-family="JetBrains Mono" font-size="10" font-weight="bold">4</text>
-                <rect x="260" y="192" width="94" height="17" rx="4" fill="#122622" opacity="0.88"/>
+                <rect x="260" y="192" width="94" height="17" rx="4" fill="#2B1E16" opacity="0.88"/>
                 <text x="307" y="204" text-anchor="middle" fill="#FCD34D" font-family="Plus Jakarta Sans" font-size="10" font-weight="bold">Cúcuta / Pamplona</text>
               </g>
 
@@ -581,7 +634,7 @@
                 <circle cx="95" cy="235" r="16" fill="none" stroke="#10B981" class="map-ring-pulse"/>
                 <circle id="node-circle-3" cx="95" cy="235" r="11" fill="#10B981" stroke="#FFFFFF" stroke-width="2" filter="url(#glow-node)"/>
                 <text x="95" y="239" text-anchor="middle" fill="#FFFFFF" font-family="JetBrains Mono" font-size="10" font-weight="bold">3</text>
-                <rect x="48" y="252" width="95" height="17" rx="4" fill="#122622" opacity="0.88"/>
+                <rect x="48" y="252" width="95" height="17" rx="4" fill="#2B1E16" opacity="0.88"/>
                 <text x="95" y="264" text-anchor="middle" fill="#6EE7B7" font-family="Plus Jakarta Sans" font-size="10" font-weight="bold">Barrancabermeja</text>
               </g>
 
@@ -590,7 +643,7 @@
                 <circle cx="195" cy="245" r="18" fill="none" stroke="#F43F5E" class="map-ring-pulse"/>
                 <circle id="node-circle-1" cx="195" cy="245" r="14" fill="#F43F5E" stroke="#FFFFFF" stroke-width="3" filter="url(#glow-node)"/>
                 <text x="195" y="249" text-anchor="middle" fill="#FFFFFF" font-family="JetBrains Mono" font-size="11" font-weight="bold">1</text>
-                <rect x="150" y="264" width="90" height="18" rx="4" fill="#122622" opacity="0.92"/>
+                <rect x="150" y="264" width="90" height="18" rx="4" fill="#2B1E16" opacity="0.92"/>
                 <text x="195" y="276" text-anchor="middle" fill="#FDA4AF" font-family="Plus Jakarta Sans" font-size="10.5" font-weight="bold">Bucaramanga</text>
               </g>
 
@@ -599,7 +652,7 @@
                 <circle cx="195" cy="350" r="16" fill="none" stroke="#F97316" class="map-ring-pulse"/>
                 <circle id="node-circle-2" cx="195" cy="350" r="11" fill="#F97316" stroke="#FFFFFF" stroke-width="2" filter="url(#glow-node)"/>
                 <text x="195" y="354" text-anchor="middle" fill="#FFFFFF" font-family="JetBrains Mono" font-size="10" font-weight="bold">2</text>
-                <rect x="150" y="367" width="92" height="17" rx="4" fill="#122622" opacity="0.88"/>
+                <rect x="150" y="367" width="92" height="17" rx="4" fill="#2B1E16" opacity="0.88"/>
                 <text x="196" y="379" text-anchor="middle" fill="#FDBA74" font-family="Plus Jakarta Sans" font-size="10" font-weight="bold">Vélez / Málaga</text>
               </g>
             </svg>
@@ -1153,7 +1206,7 @@
         <svg viewBox="0 0 600 400" class="w-full h-full object-cover">
           <defs>
             <linearGradient id="sky-chic" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#2D1914"/><stop offset="50%" stop-color="#8C341A"/><stop offset="100%" stop-color="#E2A03F"/>
+              <stop offset="0%" stop-color="#2D1914"/><stop offset="50%" stop-color="#7A3B22"/><stop offset="100%" stop-color="#E2A03F"/>
             </linearGradient>
             <linearGradient id="canyon-grad" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" stop-color="#6E2814"/><stop offset="100%" stop-color="#210B06"/>
@@ -1176,7 +1229,7 @@
           <rect width="600" height="400" fill="url(#sky-velez)"/>
           <path d="M 0 230 Q 180 180 360 210 T 600 190 L 600 400 L 0 400 Z" fill="#334155"/>
           <rect x="260" y="140" width="40" height="130" fill="#F8FAFC"/>
-          <polygon points="260,140 280,90 300,140" fill="#B84A27"/>
+          <polygon points="260,140 280,90 300,140" fill="#B5532A"/>
           <polygon points="0,400 240,270 240,320 0,400" fill="#7C2D12"/>
           <polygon points="600,400 320,270 320,320 600,400" fill="#9A3412"/>
           <polygon points="240,400 275,270 290,270 320,400" fill="#CBD5E1"/>
@@ -1215,8 +1268,8 @@
           <path d="M 200 170 C 200 130 280 130 280 170 Z" fill="#0284C7"/>
           <rect x="120" y="190" width="60" height="130" fill="#E2E8F0"/>
           <rect x="300" y="190" width="60" height="130" fill="#E2E8F0"/>
-          <polygon points="120,190 150,140 180,190" fill="#B84A27"/>
-          <polygon points="300,190 330,140 360,190" fill="#B84A27"/>
+          <polygon points="120,190 150,140 180,190" fill="#B5532A"/>
+          <polygon points="300,190 330,140 360,190" fill="#B5532A"/>
           <path d="M 0 340 Q 300 240 600 340" fill="none" stroke="#F59E0B" stroke-width="12" opacity="0.8"/>
           <rect y="320" width="600" height="80" fill="#1E293B"/>
         </svg>`,
@@ -1224,10 +1277,10 @@
         <svg viewBox="0 0 600 400" class="w-full h-full object-cover">
           <defs>
             <linearGradient id="sky-est" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#15202B"/><stop offset="45%" stop-color="#4C2638"/><stop offset="80%" stop-color="#9E4730"/><stop offset="100%" stop-color="#D97706"/>
+              <stop offset="0%" stop-color="#15202B"/><stop offset="45%" stop-color="#4C2638"/><stop offset="80%" stop-color="#9E4730"/><stop offset="100%" stop-color="#D4923A"/>
             </linearGradient>
             <linearGradient id="rock-pinn" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#B84A27"/><stop offset="60%" stop-color="#7C2D12"/><stop offset="100%" stop-color="#451A09"/>
+              <stop offset="0%" stop-color="#B5532A"/><stop offset="60%" stop-color="#7C2D12"/><stop offset="100%" stop-color="#451A09"/>
             </linearGradient>
           </defs>
           <rect width="600" height="400" fill="url(#sky-est)"/>
@@ -1240,9 +1293,9 @@
           <path d="M 280 400 L 275 240 L 295 200 L 315 240 L 320 400 Z" fill="url(#rock-pinn)"/>
           <path d="M 450 400 L 440 170 L 465 130 L 490 170 L 500 400 Z" fill="url(#rock-pinn)"/>
           <polygon points="120,400 120,350 145,330 170,350 170,400" fill="#F8FAFC"/>
-          <polygon points="120,350 145,330 170,350" fill="none" stroke="#B84A27" stroke-width="4"/>
+          <polygon points="120,350 145,330 170,350" fill="none" stroke="#B5532A" stroke-width="4"/>
           <polygon points="350,400 350,360 375,340 400,360 400,400" fill="#F8FAFC"/>
-          <polygon points="350,360 375,340 400,360" fill="none" stroke="#B84A27" stroke-width="4"/>
+          <polygon points="350,360 375,340 400,360" fill="none" stroke="#B5532A" stroke-width="4"/>
         </svg>`
     };
 
@@ -2112,13 +2165,14 @@
   <!-- Atlas (globo) y líneas de entonación -->
   <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
-  <script src="data/geo-santander.js?v=202611231839"></script>
-  <script src="js/atlas.js?v=202611231839"></script>
-  <script src="data/muestras.js?v=202611231839"></script>
-  <script src="js/fonetica.js?v=202611231839"></script>
-  <script src="js/fonador.js?v=202611231839"></script>
-  <script src="js/entonacion.js?v=202611231839"></script>
-  <script src="js/shell.js?v=202611231839"></script>
-  <script src="js/videos.js?v=202611231839"></script>
+  <script src="data/geo-santander.js?v=202611251918"></script>
+  <script src="js/atlas.js?v=202611251918"></script>
+  <script src="data/muestras.js?v=202611251918"></script>
+  <script src="js/fonetica.js?v=202611251918"></script>
+  <script src="js/fonador.js?v=202611251918"></script>
+  <script src="js/entonacion.js?v=202611251918"></script>
+  <script src="js/decor.js?v=202611251918"></script>
+  <script src="js/shell.js?v=202611251918"></script>
+  <script src="js/videos.js?v=202611251918"></script>
 </body>
 </html>

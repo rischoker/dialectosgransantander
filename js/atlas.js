@@ -31,9 +31,9 @@
 
   // Colores tomados de la paleta de la página
   const C = {
-    ocean: '#1B4640', oceanDeep: '#10302B', oceanEdge: 'rgba(160,220,205,0.35)', land: '#E4DCCB', landStroke: '#B8A98F',
-    colombia: '#F3DFC6', dptoStroke: '#C29C78', santander: '#B84A27', norte: '#D97706',
-    ink: '#1C2526', inkSoft: '#3E4A4B', grat: 'rgba(255,255,255,0.07)'
+    ocean: '#2F5C73', oceanDeep: '#1B3A4B', oceanEdge: 'rgba(190,220,230,0.35)', land: '#EADBC0', landStroke: '#BFA37E',
+    colombia: '#F1D5AE', dptoStroke: '#B98E63', santander: '#B5532A', norte: '#D4923A',
+    ink: '#2E2119', inkSoft: '#3E4A4B', grat: 'rgba(255,255,255,0.07)'
   };
 
   // Subzonas (coordenadas aproximadas de las cabeceras; colores iguales a los de la página)
@@ -96,13 +96,13 @@
     const rr = R * cam.zoom;
     if (cam.zoom < 1.6) {
       const halo = ctx.createRadialGradient(W / 2, H / 2, rr * 0.96, W / 2, H / 2, rr * 1.16);
-      halo.addColorStop(0, 'rgba(125,211,192,0.38)'); halo.addColorStop(1, 'rgba(125,211,192,0)');
+      halo.addColorStop(0, 'rgba(170,205,218,0.38)'); halo.addColorStop(1, 'rgba(170,205,218,0)');
       ctx.fillStyle = halo; ctx.beginPath(); ctx.arc(W / 2, H / 2, rr * 1.16, 0, 7); ctx.fill();
     }
     // Océano con luz lateral
     ctx.beginPath(); path(sphere);
     const g = ctx.createRadialGradient(W / 2 - rr * 0.35, H / 2 - rr * 0.4, rr * 0.05, W / 2, H / 2, rr);
-    g.addColorStop(0, '#2C6B61'); g.addColorStop(0.7, C.ocean); g.addColorStop(1, C.oceanDeep);
+    g.addColorStop(0, '#4A7E92'); g.addColorStop(0.7, C.ocean); g.addColorStop(1, C.oceanDeep);
     ctx.fillStyle = cam.zoom < 3 ? g : C.ocean; ctx.fill();
 
     ctx.beginPath(); path(graticule); ctx.strokeStyle = C.grat; ctx.lineWidth = 0.6; ctx.stroke();
