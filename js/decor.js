@@ -14,6 +14,7 @@
     laboratorio: `<path d="M2 12h3l2-5 3 10 3-14 3 12 2-3h4"/>`,
     lexico: `<path d="M4 9.5h16v6H4z"/><path d="M3 9.5c4-2.5 14-2.5 18 0M3 15.5c4 2.5 14 2.5 18 0"/><path d="M12 7.5v10"/>`,
     corpus: `<rect x="3" y="9" width="18" height="11" rx="1.5"/><path d="m3.5 9 1.6-4.3 15.4 2.4L20 9"/><path d="m8 5.4 1.4 3.4M13 6.2l1.4 3"/><path d="m10.5 12.3 4 2.2-4 2.2z"/>`,
+    conclusiones: `<path d="M12 3 14.5 8l5.5.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9L9.5 8z"/>`,
     bibliografia: `<path d="M5 4h3v16H5zM9 4h3v16H9z"/><path d="m13 5 2.9-.8 4.1 15.4-2.9.8z"/><path d="M5 8h3M9 8h3M5 16h3M9 16h3"/>`
   };
   const svgIcon = (k, cls) => `<svg viewBox="0 0 24 24" class="${cls || 'w-[18px] h-[18px]'}" ${S} stroke-width="1.6" aria-hidden="true">${ICONS[k] || ''}</svg>`;
@@ -47,6 +48,7 @@
     laboratorio: [],
     lexico: [['bocadillo', 'left:-40px;top:40px;width:320px;opacity:.08'], ['hormiga', 'right:-10px;bottom:200px;width:260px;opacity:.07;transform:rotate(-20deg)'], ['arepa', 'right:22%;top:-50px;width:230px;opacity:.06']],
     corpus: [['sombrero', 'left:-60px;bottom:120px;width:360px;opacity:.07'], ['tiple', 'right:-40px;top:20px;width:280px;opacity:.06']],
+    conclusiones: [['canon', 'right:-40px;bottom:-30px;width:460px;opacity:.06'], ['mapa', 'left:-50px;top:80px;width:320px;opacity:.05']],
     bibliografia: [['mapa', 'left:-40px;bottom:120px;width:380px;opacity:.06'], ['bocadillo', 'right:-30px;top:30px;width:260px;opacity:.07']]
   };
   document.querySelectorAll('.unit').forEach(u => {
